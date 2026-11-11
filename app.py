@@ -68,24 +68,18 @@ if st.session_state.step == 1:
 
 
 # ==========================================
-# ÉCRAN 2 : SCÉNARIO & HÉROS
+# ÉCRAN 2 : SCÉNARIO & HÉROS (VIDE AU DÉMARRAGE)
 # ==========================================
 elif st.session_state.step == 2:
     st.title("🗺️ Configuration de la Partie")
     
     all_heroes, all_monsters, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     
+    # --- 1. Sélection du Scénario & Aperçu ---
     st.subheader("1. Choix du Scénario")
     scenario_names = [s['name'] for s in all_scenarios]
     chosen_scenario_name = st.selectbox("Sélectionnez le scénario", scenario_names)
     st.session_state.current_scenario = chosen_scenario_name
-    
-    # Extraction du numéro de scénario pour estimer la progression de campagne/équipement
-    try:
-        scen_num = int(chosen_scenario_name.split(":")[0].replace("Scénario", "").strip())
-    except:
-        scen_num = 1
-    st.session_state.campaign_scenario_index = scen_num
     
     current_scen_data = next((s for s in all_scenarios if s['name'] == chosen_scenario_name), None)
     if current_scen_data:
@@ -98,10 +92,17 @@ elif st.session_state.step == 2:
 
     st.divider()
 
+    # --- 2. Sélection des Héros via Liste Déroulante (Vide par défaut) ---
     st.subheader("2. Sélection des Héros Engagés")
-    hero_options = list(all_heroes.keys())
-    selected_this_screen = st.multiselect("Choisissez vos héros (1 à 4+)", hero_options, default=[])
     
+    hero_options = list(all_heroes.keys())
+    selected_this_screen = st.multiselect(
+        "Choisissez vos héros (1 à 4+)", 
+        hero_options,
+        default=[]  # <-- Aucun héros pré-sélectionné
+    )
+    
+    # Affichage des cartes/photos et infos des héros sélectionnés
     if selected_this_screen:
         st.write("### 🃏 Cartes & Pouvoirs des Héros Sélectionnés")
         cols = st.columns(min(len(selected_this_screen), 2))
@@ -110,11 +111,14 @@ elif st.session_state.step == 2:
             h_data = all_heroes[h_name]
             with cols[idx % len(cols)]:
                 st.markdown(f"#### {h_name}")
+                
                 if os.path.exists(h_data['image']):
                     st.image(h_data['image'], use_container_width=True)
                 else:
                     st.warning(f"Image manquante : `{h_data['image']}`")
+                
                 st.write(f"❤️ **PV :** {h_data['hp']}")
+                st.write(f"🛡️ **Défense :** {h_data['def']} Dé(s)")
                 st.info(f"✨ **Pouvoir ({h_data['ability']}) :**\n{h_data['ability_desc']}")
 
     st.divider()
@@ -129,11 +133,13 @@ elif st.session_state.step == 2:
             if not selected_this_screen:
                 st.error("Sélectionnez au moins un héros !")
             else:
-                st.session_state.active_heroes = {h: {'hp': all_heroes[h]['hp'], 'max_hp': all_heroes[h]['hp'], 'image': all_heroes[h]['image']} for h in selected_this_screen}
-                st.session_state.spawned_monsters = []  # Plateau vide au démarrage
+                st.session_state.active_heroes = {h: {'hp': all_heroes[h]['hp'], 'max_hp': all_heroes[h]['hp']} for h in selected_this_screen}
+                st.session_state.spawned_monsters = [
+                    {'id': 1, 'name': 'Gobelin Archer', 'hp': 2, 'max_hp': 2},
+                    {'id': 2, 'name': 'Orc Maraudeur', 'hp': 3, 'max_hp': 3}
+                ]
                 st.session_state.step = 3
                 st.rerun()
-
 
 # ==========================================
 # ÉCRAN 3 : TABLEAU DE BORD DE JEU
