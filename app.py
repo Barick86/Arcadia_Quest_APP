@@ -65,7 +65,7 @@ if st.session_state.step == 1:
 
 
 # ==========================================
-# ÉCRAN 2 : SCÉNARIO & HÉROS AVEC INFO-BULLES
+# ÉCRAN 2 : SCÉNARIO & HÉROS (MULTISELECT & PHOTOS)
 # ==========================================
 elif st.session_state.step == 2:
     st.title("🗺️ Configuration de la Partie")
@@ -78,7 +78,6 @@ elif st.session_state.step == 2:
     chosen_scenario_name = st.selectbox("Sélectionnez le scénario", scenario_names)
     st.session_state.current_scenario = chosen_scenario_name
     
-    # Encadré info dynamique du scénario sélectionné
     current_scen_data = next((s for s in all_scenarios if s['name'] == chosen_scenario_name), None)
     if current_scen_data:
         with st.container():
@@ -90,22 +89,38 @@ elif st.session_state.step == 2:
 
     st.divider()
 
-    # --- 2. Sélection des Héros avec Info-bulles (Tooltips) ---
-    st.subheader("2. Sélection des Héros Engagés (1 à 4+ engagés)")
-    st.caption("Survolez (ou touchez) les icônes d'aide ℹ️ pour afficher les détails des compétences et dés.")
+    # --- 2. Sélection des Héros via Liste Déroulante (Multiselect) ---
+    st.subheader("2. Sélection des Héros Engagés")
     
-    selected_this_screen = []
-    for h_name, h_data in all_heroes.items():
-        tooltip_text = (
-            f"Attaque : {h_data['att']}\n"
-            f"Défense : {h_data['def']}\n"
-            f"Points de Vie (PV) : {h_data['hp']}\n\n"
-            f"Pouvoir ({h_data['ability']}) :\n{h_data['ability_desc']}"
-        )
+    hero_options = list(all_heroes.keys())
+    selected_this_screen = st.multiselect(
+        "Choisissez vos héros (1 à 4+)", 
+        hero_options,
+        default=['Maya', 'Grom']  # Sélection par défaut pour tester
+    )
+    
+    # Affichage des cartes/photos et infos des héros sélectionnés
+    if selected_this_screen:
+        st.write("### 🃏 Cartes & Pouvoirs des Héros Sélectionnés")
+        cols = st.columns(min(len(selected_this_screen), 2)) # Grille de 2 colonnes max pour mobile/PC
         
-        if st.checkbox(f"**{h_name}** — Pouvoir : {h_data['ability']}", key=f"hero_sel_{h_name}", help=tooltip_text):
-            selected_this_screen.append(h_name)
-            
+        for idx, h_name in enumerate(selected_this_screen):
+            h_data = all_heroes[h_name]
+            with cols[idx % len(cols)]:
+                st.markdown(f"#### {h_name}")
+                
+                # Affichage de l'image de la carte si elle existe dans assets/images/
+                if os.path.exists(h_data['image']):
+                    st.image(h_data['image'], use_container_width=True)
+                else:
+                    st.warning(f"Image manquante : `{h_data['image']}`")
+                
+                # Détails textuels et capacités
+                st.write(f"❤️ **PV :** {h_data['hp']}")
+                st.write(f"⚔️ **Attaque :** {h_data['att']}")
+                st.write(f"🛡️ **Défense :** {h_data['def']}")
+                st.info(f"✨ **Pouvoir ({h_data['ability']}) :**\n{h_data['ability_desc']}")
+
     st.divider()
     
     col1, col2 = st.columns(2)
@@ -125,7 +140,6 @@ elif st.session_state.step == 2:
                 ]
                 st.session_state.step = 3
                 st.rerun()
-
 
 # ==========================================
 # ÉCRAN 3 : TABLEAU DE BORD DE JEU
