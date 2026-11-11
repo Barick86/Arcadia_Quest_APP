@@ -1,199 +1,56 @@
-import streamlit as st
-import random
-import os
+# data/base.py
 
-st.set_page_config(page_title="Arcadia Quest Assistant - Base", page_icon="⚔️", layout="centered")
-
-# --- DATABASE OFFICIELLE : BOÎTE DE BASE ---
-MONSTERS_DB = {
-    'Gobelin Archer': {'att': '2 Dés (Dist)', 'def': '1 Dé', 'hp': 2, 'ability': 'Tir à couvert'},
-    'Orc Maraudeur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'ability': 'Charge'},
-    'Sœur de la Douleur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'ability': 'Tourment'},
-    'Sœur du Plaisir': {'att': '3 Dés (Magie)', 'def': '2 Dés', 'hp': 3, 'ability': 'Charme'},
-    'Homme-Bête à Marteau': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 4, 'ability': 'Écrasement'},
-    'Homme-Bête à Lance': {'att': '3 Dés (CàC)', 'def': '3 Dés', 'hp': 4, 'ability': 'Allonge'},
-    'Minotaure': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 5, 'ability': ' piétinement (Mini-Boss)'},
-    'Troll': {'att': '4 Dés (CàC)', 'def': '3 Dés', 'hp': 6, 'ability': 'Régénération (Boss)'},
-    'Capitaine Gobelin': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 6, 'ability': 'Riposte (Boss)'},
-    'Lord Fang': {'att': '5 Dés (CàC/Magie)', 'def': '3 Dés', 'hp': 8, 'ability': 'Seigneur Vampire (Grand Boss)'}
+BOX_INFO = {
+    "id": "base",
+    "name": "Boîte de Base Arcadia Quest",
+    "image": "assets/images/boite_base.jpg",
+    "description": "La boîte originale d'Arcadia Quest avec sa campagne en 11 scénarios."
 }
 
-HEROES_DB = {
-    'Maya': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Maîtrise du Mana'},
-    'Grom': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Frappe Brutale'},
-    'Scarlet': {'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 'ability': 'Tir Précis'},
-    'Seth': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 'ability': 'Fureur'},
-    'Dirk': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 'ability': 'Bataille'},
-    'Zazu': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Esquive'},
-    'Chubby': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Robuste'},
-    'Hilda': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Soin Divin'},
-    'Bjorn': {'hp': 6, 'att': '4 Dés (CàC)', 'def': '1 Dé', 'ability': 'Puissance Berserk'},
-    'Krom': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Coup Scénarisé'},
-    'Wryn': {'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 'ability': 'Tir Multiple'},
-    'Dart': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Agilité'}
+HEROES = {
+    'Maya': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Maîtrise du Mana', 'box': 'base'},
+    'Grom': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Frappe Brutale', 'box': 'base'},
+    'Scarlet': {'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 'ability': 'Tir Précis', 'box': 'base'},
+    'Seth': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 'ability': 'Fureur', 'box': 'base'},
+    'Dirk': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 'ability': 'Bataille', 'box': 'base'},
+    'Zazu': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Esquive', 'box': 'base'},
+    'Chubby': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Robuste', 'box': 'base'},
+    'Hilda': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Soin Divin', 'box': 'base'},
+    'Bjorn': {'hp': 6, 'att': '4 Dés (CàC)', 'def': '1 Dé', 'ability': 'Puissance Berserk', 'box': 'base'},
+    'Krom': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Coup Scénarisé', 'box': 'base'},
+    'Wryn': {'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 'ability': 'Tir Multiple', 'box': 'base'},
+    'Dart': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Agilité', 'box': 'base'}
 }
 
-# Campagne officielle de la boîte de base (6 scénarios Outer, 4 Inner, 1 Final)
-SCENARIOS_DB = [
-    "Scénario 1 : La Nuit Tombe (Outer Circle)",
-    "Scénario 2 : Pillage au Marché (Outer Circle)",
-    "Scénario 3 : Les Docks Endormis (Outer Circle)",
-    "Scénario 4 : La Tour des Gobelins (Outer Circle)",
-    "Scénario 5 : Festin au Village (Outer Circle)",
-    "Scénario 6 : Les Égouts Sombres (Outer Circle)",
-    "Scénario 7 : Le Temple Sacrifié (Inner Circle)",
-    "Scénario 8 : Les Jardins Suspendus (Inner Circle)",
-    "Scénario 9 : La Bibliothèque Interdite (Inner Circle)",
-    "Scénario 10 : La Salle du Trône (Inner Circle)",
-    "Scénario 11 : Affinal Final - Le Temple de l'Aurore Crépusculaire"
+MONSTERS = {
+    'Gobelin Archer': {'att': '2 Dés (Dist)', 'def': '1 Dé', 'hp': 2, 'ability': 'Tir à couvert', 'box': 'base'},
+    'Orc Maraudeur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'ability': 'Charge', 'box': 'base'},
+    'Sœur de la Douleur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'ability': 'Tourment', 'box': 'base'},
+    'Sœur du Plaisir': {'att': '3 Dés (Magie)', 'def': '2 Dés', 'hp': 3, 'ability': 'Charme', 'box': 'base'},
+    'Homme-Bête à Marteau': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 4, 'ability': 'Écrasement', 'box': 'base'},
+    'Homme-Bête à Lance': {'att': '3 Dés (CàC)', 'def': '3 Dés', 'hp': 4, 'ability': 'Allonge', 'box': 'base'},
+    'Minotaure': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 5, 'ability': 'Piétinement (Mini-Boss)', 'box': 'base'},
+    'Troll': {'att': '4 Dés (CàC)', 'def': '3 Dés', 'hp': 6, 'ability': 'Régénération (Boss)', 'box': 'base'},
+    'Capitaine Gobelin': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 6, 'ability': 'Riposte (Boss)', 'box': 'base'},
+    'Lord Fang': {'att': '5 Dés (CàC/Magie)', 'def': '3 Dés', 'hp': 8, 'ability': 'Seigneur Vampire (Grand Boss)', 'box': 'base'}
+}
+
+SCENARIOS = [
+    {"name": "Scénario 1 : La Nuit Tombe (Outer Circle)", "box": "base", "boss": "Capitaine Gobelin"},
+    {"name": "Scénario 2 : Pillage au Marché (Outer Circle)", "box": "base", "boss": "Minotaure"},
+    {"name": "Scénario 3 : Les Docks Endormis (Outer Circle)", "box": "base", "boss": "Troll"},
+    {"name": "Scénario 4 : La Tour des Gobelins (Outer Circle)", "box": "base", "boss": "Capitaine Gobelin"},
+    {"name": "Scénario 5 : Festin au Village (Outer Circle)", "box": "base", "boss": "Troll"},
+    {"name": "Scénario 6 : Les Égouts Sombres (Outer Circle)", "box": "base", "boss": "Minotaure"},
+    {"name": "Scénario 7 : Le Temple Sacrifié (Inner Circle)", "box": "base", "boss": "Lord Fang"},
+    {"name": "Scénario 8 : Les Jardins Suspendus (Inner Circle)", "box": "base", "boss": "Lord Fang"},
+    {"name": "Scénario 9 : La Bibliothèque Interdite (Inner Circle)", "box": "base", "boss": "Lord Fang"},
+    {"name": "Scénario 10 : La Salle du Trône (Inner Circle)", "box": "base", "boss": "Lord Fang"},
+    {"name": "Scénario 11 : Affrontement Final - Le Temple de l'Aurore", "box": "base", "boss": "Lord Fang"}
 ]
 
-# --- INITIALISATION SESSION ---
-if 'step' not in st.session_state:
-    st.session_state.step = 1
-if 'active_heroes' not in st.session_state:
-    st.session_state.active_heroes = {}
-if 'spawned_monsters' not in st.session_state:
-    st.session_state.spawned_monsters = []
-if 'turn' not in st.session_state:
-    st.session_state.turn = 1
-if 'threat' not in st.session_state:
-    st.session_state.threat = 1
-
-# --- ÉCRAN 1 : ACCUEIL & BOÎTE ACTIVE ---
-if st.session_state.step == 1:
-    st.title("⚔️ ARCADIA COOP DRIVER ⚔️")
-    st.subheader("Matériel Actif")
-    
-    col_img, col_info = st.columns([1, 2])
-    with col_img:
-        box_image_path = "assets/images/boite_base.jpg"
-        if os.path.exists(box_image_path):
-            st.image(box_image_path, use_container_width=True)
-        else:
-            st.markdown("📦 **[ Image Boîte de Base ]**\n*(Place ton image dans assets/images/boite_base.jpg)*")
-            
-    with col_info:
-        st.success("**Boîte de Base sélectionnée (Mode Isolé)**")
-        st.write("• **12 Héros** officiels disponibles")
-        st.write("• **11 Scénarios** de campagne d'origine")
-        st.write("• Bestiaire complet (Gobelins, Orcs, Sœurs, Hommes-Bêtes, Trolls, Minotaure, Lord Fang)")
-    
-    st.divider()
-    
-    if st.button("CONFIGURER SCÉNARIO & HÉROS ➔", use_container_width=True):
-        st.session_state.step = 2
-        st.rerun()
-
-# --- ÉCRAN 2 : SCÉNARIO & HÉROS ---
-elif st.session_state.step == 2:
-    st.title("🗺️ Configuration de la Partie")
-    
-    chosen_scenario = st.selectbox("Choisissez le Scénario", SCENARIOS_DB)
-    st.session_state.current_scenario = chosen_scenario
-    
-    st.subheader("Sélectionnez vos Héros (1 à 4+ engagés)")
-    
-    selected_this_screen = []
-    # Affichage en colonnes ou liste propre pour les 12 héros
-    for h_name, h_data in HEROES_DB.items():
-        if st.checkbox(f"**{h_name}** — PV: {h_data['hp']} | Att: {h_data['att']} | Pouvoir: {h_data['ability']}", key=f"hero_{h_name}"):
-            selected_this_screen.append(h_name)
-            
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("⬅️ Retour", use_container_width=True):
-            st.session_state.step = 1
-            st.rerun()
-    with col2:
-        if st.button("LANCER LA PARTIE ➔", use_container_width=True):
-            if not selected_this_screen:
-                st.error("Sélectionnez au moins un héros !")
-            else:
-                st.session_state.active_heroes = {h: {'hp': HEROES_DB[h]['hp'], 'max_hp': HEROES_DB[h]['hp']} for h in selected_this_screen}
-                # Spawn initial par défaut pour lancer la partie
-                st.session_state.spawned_monsters = [
-                    {'id': 1, 'name': 'Gobelin Archer', 'hp': 2, 'max_hp': 2},
-                    {'id': 2, 'name': 'Orc Maraudeur', 'hp': 3, 'max_hp': 3}
-                ]
-                st.session_state.step = 3
-                st.rerun()
-
-# --- ÉCRAN 3 : TABLEAU DE BORD DE JEU ---
-elif st.session_state.step == 3:
-    st.title("🛡️ Tableau de Bord")
-    
-    col_t1, col_t2 = st.columns(2)
-    col_t1.metric("Tour Actuel", st.session_state.turn)
-    col_t2.metric("Niveau de Menace", st.session_state.threat)
-    
-    if st.button("Tour Suivant (+1 Menace)", use_container_width=True):
-        st.session_state.turn += 1
-        st.session_state.threat += 1
-        st.rerun()
-
-    st.divider()
-    
-    # --- SUIVI DES HÉROS ---
-    st.subheader("👥 Vos Héros")
-    for h_name, data in list(st.session_state.active_heroes.items()):
-        c1, c2 = st.columns([3, 2])
-        c1.write(f"**{h_name}** : {data['hp']} / {data['max_hp']} PV")
-        
-        col_minus, col_plus = c2.columns(2)
-        if col_minus.button("➖", key=f"h_min_{h_name}") and data['hp'] > 0:
-            data['hp'] -= 1
-            st.rerun()
-        if col_plus.button("➕", key=f"h_plus_{h_name}") and data['hp'] < data['max_hp']:
-            data['hp'] += 1
-            st.rerun()
-            
-    st.divider()
-    
-    # --- SUIVI DES MONSTRES (GRANULAIRE) ---
-    st.subheader("👾 Monstres sur le Plateau")
-    
-    m_to_add = st.selectbox("Ajouter un monstre", list(MONSTERS_DB.keys()), key="select_monster_add")
-    if st.button("Faire spawner ce monstre", use_container_width=True):
-        new_id = (st.session_state.spawned_monsters[-1]['id'] + 1) if st.session_state.spawned_monsters else 1
-        m_info = MONSTERS_DB[m_to_add]
-        st.session_state.spawned_monsters.append({'id': new_id, 'name': m_to_add, 'hp': m_info['hp'], 'max_hp': m_info['hp']})
-        st.rerun()
-
-    if not st.session_state.spawned_monsters:
-        st.caption("Aucun monstre sur le plateau.")
-    else:
-        for idx, m in enumerate(list(st.session_state.spawned_monsters)):
-            m_cols = st.columns([3, 2, 1])
-            m_cols[0].write(f"#{m['id']} {m['name']} ({m['hp']}/{m['max_hp']} PV)")
-            if m_cols[1].button("Dégât 🗡️", key=f"m_dmg_{m['id']}_{idx}"):
-                m['hp'] -= 1
-                if m['hp'] <= 0:
-                    st.session_state.spawned_monsters.pop(idx)
-                st.rerun()
-            if m_cols[2].button("🗑️", key=f"m_del_{m['id']}_{idx}"):
-                st.session_state.spawned_monsters.pop(idx)
-                st.rerun()
-
-    st.divider()
-    
-    # --- MOTEUR IA ---
-    st.subheader("🤖 Moteur IA - Ciblage Prioritaire")
-    if st.button("Calculer la Cible (Héros le plus faible en PV)", use_container_width=True):
-        alive_heroes = {h: d for h, d in st.session_state.active_heroes.items() if d['hp'] > 0}
-        if alive_heroes:
-            min_hp = min(d['hp'] for d in alive_heroes.values())
-            candidates = [h for h, d in alive_heroes.items() if d['hp'] == min_hp]
-            target = random.choice(candidates)
-            st.success(f"🎯 Cible désignée : **{target}** ({min_hp} PV restants) !")
-        else:
-            st.error("Tous les héros sont KO !")
-
-    st.divider()
-    if st.button("🔄 Recommencer la Partie", use_container_width=True):
-        st.session_state.step = 1
-        st.session_state.spawned_monsters = []
-        st.session_state.active_heroes = {}
-        st.session_state.turn = 1
-        st.session_state.threat = 1
-        st.rerun()
+LEXICON = {
+    "Régénération": "Le monstre récupère des PV au début de son tour.",
+    "Riposte": "Inflige des dégâts automatiques en réaction à une attaque au corps à corps.",
+    "Tir à couvert": "Ignore certaines pénalités de distance ou d'obstacles."
+}
