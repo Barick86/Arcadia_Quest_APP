@@ -133,7 +133,13 @@ elif st.session_state.step == 2:
             if not selected_this_screen:
                 st.error("Sélectionnez au moins un héros !")
             else:
-                st.session_state.active_heroes = {h: {'hp': all_heroes[h]['hp'], 'max_hp': all_heroes[h]['hp']} for h in selected_this_screen}
+                st.session_state.active_heroes = {
+                    h: {
+                        'hp': all_heroes[h]['hp'], 
+                        'max_hp': all_heroes[h]['hp'],
+                        'image': all_heroes[h]['image']
+                    } for h in selected_this_screen
+                }
                 st.session_state.spawned_monsters = [
                     {'id': 1, 'name': 'Gobelin Archer', 'hp': 2, 'max_hp': 2},
                     {'id': 2, 'name': 'Orc Maraudeur', 'hp': 3, 'max_hp': 3}
