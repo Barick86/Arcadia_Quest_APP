@@ -245,14 +245,6 @@ elif st.session_state.step == 3:
             if m_cols[2].button("🗑️", key=f"del_monster_{m['id']}"):
                 st.session_state.spawned_monsters.pop(idx)
                 st.rerun()
-                
-            if m_cols[2].button("🗑️", key=f"m_del_{m['id']}_{idx}"):
-                st.session_state.spawned_monsters.pop(idx)
-                st.rerun()
-                
-            if m_cols[2].button("🗑️", key=f"m_del_{m['id']}_{idx}"):
-                st.session_state.spawned_monsters.pop(idx)
-                st.rerun()
 
     st.divider()
     
