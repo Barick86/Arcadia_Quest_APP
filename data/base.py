@@ -12,76 +12,89 @@ HEROES = {
         'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 
         'ability': 'Maîtrise du Mana', 
         'ability_desc': 'Permet de relancer un dé magique par attaque ou d’amplifier un sort pour infliger un dégât brut supplémentaire.',
+        'image': 'assets/images/maya.jpg',
         'box': 'base'
     },
     'Grom': {
         'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 
         'ability': 'Frappe Brutale', 
         'ability_desc': 'Ajoute un succès automatique lors des attaques au corps à corps si la cible possède déjà au moins un marqueur de dégât.',
+        'image': 'assets/images/grom.jpg',
         'box': 'base'
     },
     'Scarlet': {
         'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 
         'ability': 'Tir Précis', 
         'ability_desc': 'Permet d’ignorer les malus de distance ou de cibler un adversaire à travers une case occupée.',
+        'image': 'assets/images/scarlet.jpg',
         'box': 'base'
     },
     'Seth': {
         'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 
         'ability': 'Fureur', 
         'ability_desc': 'Octrue une action de mouvement gratuite supplémentaire s’il élimine un monstre pendant son tour.',
+        'image': 'assets/images/seth.jpg',
         'box': 'base'
     },
     'Dirk': {
         'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 
         'ability': 'Bataille', 
         'ability_desc': 'Permet de relancer un dé de défense blanc raté lors d’une attaque ennemie au corps à corps.',
+        'image': 'assets/images/dirk.jpg',
         'box': 'base'
     },
     'Zazu': {
         'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 
         'ability': 'Esquive', 
         'ability_desc': 'Réduit d’un dé les attaques ennemies ciblant Zazu grâce à son agilité naturelle.',
+        'image': 'assets/images/zazu.jpg',
         'box': 'base'
     },
     'Chubby': {
         'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 
         'ability': 'Robuste', 
         'ability_desc': 'Ignore le premier dégât reçu lors de chaque tour de jeu.',
+        'image': 'assets/images/chubby.jpg',
         'box': 'base'
     },
     'Hilda': {
         'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 
         'ability': 'Soin Divin', 
         'ability_desc': 'Peut dépenser une action pour restaurer 1 PV à un héros allié adjacent sur le plateau.',
+        'image': 'assets/images/hilda.jpg',
         'box': 'base'
     },
     'Bjorn': {
         'hp': 6, 'att': '4 Dés (CàC)', 'def': '1 Dé', 
         'ability': 'Puissance Berserk', 
         'ability_desc': 'Gagne un dé d’attaque supplémentaire lorsque ses PV tombent à 2 ou moins.',
+        'image': 'assets/images/bjorn.jpg',
         'box': 'base'
     },
     'Krom': {
         'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 
         'ability': 'Coup Scénarisé', 
         'ability_desc': 'Inflige un dégât bonus aux sbires et boss liés aux objectifs du scénario en cours.',
+        'image': 'assets/images/krom.jpg',
         'box': 'base'
     },
     'Wryn': {
         'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 
         'ability': 'Tir Multiple', 
         'ability_desc': 'Peut répartir ses dés d’attaque entre deux cibles différentes à distance.',
+        'image': 'assets/images/wryn.jpg',
         'box': 'base'
     },
     'Dart': {
         'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 
         'ability': 'Agilité', 
         'ability_desc': 'Permet de traverser les cases occupées par des monstres sans subir d’attaque d’opportunité.',
+        'image': 'assets/images/dart.jpg',
         'box': 'base'
     }
 }
 
+# (Conserve MONSTERS, SCENARIOS et LEXICON comme avant)
 MONSTERS = {
     'Gobelin Archer': {'att': '2 Dés (Dist)', 'def': '1 Dé', 'hp': 2, 'ability': 'Tir à couvert', 'box': 'base'},
     'Orc Maraudeur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'ability': 'Charge', 'box': 'base'},
