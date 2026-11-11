@@ -8,18 +8,78 @@ BOX_INFO = {
 }
 
 HEROES = {
-    'Maya': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Maîtrise du Mana', 'box': 'base'},
-    'Grom': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Frappe Brutale', 'box': 'base'},
-    'Scarlet': {'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 'ability': 'Tir Précis', 'box': 'base'},
-    'Seth': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 'ability': 'Fureur', 'box': 'base'},
-    'Dirk': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 'ability': 'Bataille', 'box': 'base'},
-    'Zazu': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Esquive', 'box': 'base'},
-    'Chubby': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Robuste', 'box': 'base'},
-    'Hilda': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Soin Divin', 'box': 'base'},
-    'Bjorn': {'hp': 6, 'att': '4 Dés (CàC)', 'def': '1 Dé', 'ability': 'Puissance Berserk', 'box': 'base'},
-    'Krom': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Coup Scénarisé', 'box': 'base'},
-    'Wryn': {'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 'ability': 'Tir Multiple', 'box': 'base'},
-    'Dart': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Agilité', 'box': 'base'}
+    'Maya': {
+        'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 
+        'ability': 'Maîtrise du Mana', 
+        'ability_desc': 'Permet de relancer un dé magique par attaque ou d’amplifier un sort pour infliger un dégât brut supplémentaire.',
+        'box': 'base'
+    },
+    'Grom': {
+        'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 
+        'ability': 'Frappe Brutale', 
+        'ability_desc': 'Ajoute un succès automatique lors des attaques au corps à corps si la cible possède déjà au moins un marqueur de dégât.',
+        'box': 'base'
+    },
+    'Scarlet': {
+        'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 
+        'ability': 'Tir Précis', 
+        'ability_desc': 'Permet d’ignorer les malus de distance ou de cibler un adversaire à travers une case occupée.',
+        'box': 'base'
+    },
+    'Seth': {
+        'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 
+        'ability': 'Fureur', 
+        'ability_desc': 'Octrue une action de mouvement gratuite supplémentaire s’il élimine un monstre pendant son tour.',
+        'box': 'base'
+    },
+    'Dirk': {
+        'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 
+        'ability': 'Bataille', 
+        'ability_desc': 'Permet de relancer un dé de défense blanc raté lors d’une attaque ennemie au corps à corps.',
+        'box': 'base'
+    },
+    'Zazu': {
+        'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 
+        'ability': 'Esquive', 
+        'ability_desc': 'Réduit d’un dé les attaques ennemies ciblant Zazu grâce à son agilité naturelle.',
+        'box': 'base'
+    },
+    'Chubby': {
+        'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 
+        'ability': 'Robuste', 
+        'ability_desc': 'Ignore le premier dégât reçu lors de chaque tour de jeu.',
+        'box': 'base'
+    },
+    'Hilda': {
+        'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 
+        'ability': 'Soin Divin', 
+        'ability_desc': 'Peut dépenser une action pour restaurer 1 PV à un héros allié adjacent sur le plateau.',
+        'box': 'base'
+    },
+    'Bjorn': {
+        'hp': 6, 'att': '4 Dés (CàC)', 'def': '1 Dé', 
+        'ability': 'Puissance Berserk', 
+        'ability_desc': 'Gagne un dé d’attaque supplémentaire lorsque ses PV tombent à 2 ou moins.',
+        'box': 'base'
+    },
+    'Krom': {
+        'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 
+        'ability': 'Coup Scénarisé', 
+        'ability_desc': 'Inflige un dégât bonus aux sbires et boss liés aux objectifs du scénario en cours.',
+        'box': 'base'
+    },
+    'Wryn': {
+        'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 
+        'ability': 'Tir Multiple', 
+        'ability_desc': 'Peut répartir ses dés d’attaque entre deux cibles différentes à distance.',
+        'box': 'base'
+    },
+    'Dart': {
+        'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 
+        'ability': 'Agilité', 
+        'ability_desc': 'Permet de traverser les cases occupées par des monstres sans subir d’attaque d’opportunité.',
+        'box': 'base'
+    }
 }
 
 MONSTERS = {
@@ -36,17 +96,83 @@ MONSTERS = {
 }
 
 SCENARIOS = [
-    {"name": "Scénario 1 : La Nuit Tombe (Outer Circle)", "box": "base", "boss": "Capitaine Gobelin"},
-    {"name": "Scénario 2 : Pillage au Marché (Outer Circle)", "box": "base", "boss": "Minotaure"},
-    {"name": "Scénario 3 : Les Docks Endormis (Outer Circle)", "box": "base", "boss": "Troll"},
-    {"name": "Scénario 4 : La Tour des Gobelins (Outer Circle)", "box": "base", "boss": "Capitaine Gobelin"},
-    {"name": "Scénario 5 : Festin au Village (Outer Circle)", "box": "base", "boss": "Troll"},
-    {"name": "Scénario 6 : Les Égouts Sombres (Outer Circle)", "box": "base", "boss": "Minotaure"},
-    {"name": "Scénario 7 : Le Temple Sacrifié (Inner Circle)", "box": "base", "boss": "Lord Fang"},
-    {"name": "Scénario 8 : Les Jardins Suspendus (Inner Circle)", "box": "base", "boss": "Lord Fang"},
-    {"name": "Scénario 9 : La Bibliothèque Interdite (Inner Circle)", "box": "base", "boss": "Lord Fang"},
-    {"name": "Scénario 10 : La Salle du Trône (Inner Circle)", "box": "base", "boss": "Lord Fang"},
-    {"name": "Scénario 11 : Affrontement Final - Le Temple de l'Aurore", "box": "base", "boss": "Lord Fang"}
+    {
+        "name": "Scénario 1 : La Nuit Tombe (Outer Circle)", 
+        "box": "base", 
+        "boss": "Capitaine Gobelin",
+        "description": "Les gobelins envahissent les rues de la cité. Vos guildes doivent sécuriser les points stratégiques avant la tombée de la nuit.",
+        "monsters": ["Gobelin Archer", "Orc Maraudeur", "Capitaine Gobelin"]
+    },
+    {
+        "name": "Scénario 2 : Pillage au Marché (Outer Circle)", 
+        "box": "base", 
+        "boss": "Minotaure",
+        "description": "Le marché central regorge de trésors abandonnés. Emparez-vous-en avant vos rivaux tout en matant la bête féroce qui y rôde.",
+        "monsters": ["Orc Maraudeur", "Sœur de la Douleur", "Minotaure"]
+    },
+    {
+        "name": "Scénario 3 : Les Docks Endormis (Outer Circle)", 
+        "box": "base", 
+        "boss": "Troll",
+        "description": "Les entrepôts portuaires cachent de sombres secrets et un redoutable Troll qui bloque l'accès aux navires.",
+        "monsters": ["Gobelin Archer", "Homme-Bête à Marteau", "Troll"]
+    },
+    {
+        "name": "Scénario 4 : La Tour des Gobelins (Outer Circle)", 
+        "box": "base", 
+        "boss": "Capitaine Gobelin",
+        "description": "Infiltrez le bastion fortifié des peaux-vertes pour déloger leur chef autoproclamé.",
+        "monsters": ["Gobelin Archer", "Orc Maraudeur", "Capitaine Gobelin"]
+    },
+    {
+        "name": "Scénario 5 : Festin au Village (Outer Circle)", 
+        "box": "base", 
+        "boss": "Troll",
+        "description": "Les monstres célèbrent une victoire en plein air. Interrompez leur festin et survivez à leur férocité.",
+        "monsters": ["Homme-Bête à Lance", "Sœur du Plaisir", "Troll"]
+    },
+    {
+        "name": "Scénario 6 : Les Égouts Sombres (Outer Circle)", 
+        "box": "base", 
+        "boss": "Minotaure",
+        "description": "Naviguez dans les labyrinthes fangeux sous la ville où rôdent de monstrueuses créatures oubliées.",
+        "monsters": ["Orc Maraudeur", "Sœur de la Douleur", "Minotaure"]
+    },
+    {
+        "name": "Scénario 7 : Le Temple Sacrifié (Inner Circle)", 
+        "box": "base", 
+        "boss": "Lord Fang",
+        "description": "L'influence maléfique de Lord Fang commence à corrompre le sanctuaire sacré d'Arcadia.",
+        "monsters": ["Sœur de la Douleur", "Sœur du Plaisir", "Lord Fang"]
+    },
+    {
+        "name": "Scénario 8 : Les Jardins Suspendus (Inner Circle)", 
+        "box": "base", 
+        "boss": "Lord Fang",
+        "description": "Un havre de paix transformé en piège mortel par les sbires du Seigneur Vampire.",
+        "monsters": ["Homme-Bête à Marteau", "Homme-Bête à Lance", "Lord Fang"]
+    },
+    {
+        "name": "Scénario 9 : La Bibliothèque Interdite (Inner Circle)", 
+        "box": "base", 
+        "boss": "Lord Fang",
+        "description": "Découvrez les grimoires ancestraux tout en échappant aux gardes d'élite de la citadelle.",
+        "monsters": ["Gobelin Archer", "Sœur du Plaisir", "Lord Fang"]
+    },
+    {
+        "name": "Scénario 10 : La Salle du Trône (Inner Circle)", 
+        "box": "base", 
+        "boss": "Lord Fang",
+        "description": "L'antre direct de Lord Fang. Chaque recoin abrite un danger mortel.",
+        "monsters": ["Troll", "Minotaure", "Lord Fang"]
+    },
+    {
+        "name": "Scénario 11 : Affrontement Final - Le Temple de l'Aurore", 
+        "box": "base", 
+        "boss": "Lord Fang",
+        "description": "Le combat ultime pour sauver Arcadia et terrasser définitivement Lord Fang et ses armées.",
+        "monsters": ["Tous les types de monstres", "Lord Fang"]
+    }
 ]
 
 LEXICON = {
