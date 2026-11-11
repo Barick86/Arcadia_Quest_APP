@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import os
 
 st.set_page_config(page_title="Arcadia Quest Assistant - Base", page_icon="⚔️", layout="centered")
 
@@ -37,12 +38,28 @@ if 'turn' not in st.session_state:
 if 'threat' not in st.session_state:
     st.session_state.threat = 1
 
-# --- ÉCRAN 1 : VALIDATION BOÎTE DE BASE ---
+# --- ÉCRAN 1 : ACCUEIL & BOÎTE ACTIVE ---
 if st.session_state.step == 1:
     st.title("⚔️ ARCADIA COOP DRIVER ⚔️")
-    st.subheader("Mode Isolé : Boîte de Base")
+    st.subheader("Matériel Actif")
     
-    st.info("Le périmètre est temporairement restreint à la boîte de base pour valider les mécaniques.")
+    # Affichage de la boîte de base (avec gestion future de l'image locale)
+    col_img, col_info = st.columns([1, 2])
+    with col_img:
+        box_image_path = "assets/images/boite_base.jpg"
+        if os.path.exists(box_image_path):
+            st.image(box_image_path, use_container_width=True)
+        else:
+            # Placeholder visuel en attendant l'image réelle
+            st.markdown("📦 **[ Image Boîte de Base ]**\n*(Place ton image dans assets/images/boite_base.jpg)*")
+            
+    with col_info:
+        st.success("**Boîte de Base sélectionnée (Mode Isolé)**")
+        st.write("• 6 Héros disponibles")
+        st.write("• 3 Scénarios originaux")
+        st.write("• Bestiaire standard")
+    
+    st.divider()
     
     if st.button("CONFIGURER SCÉNARIO & HÉROS ➔", use_container_width=True):
         st.session_state.step = 2
