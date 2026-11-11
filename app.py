@@ -229,16 +229,21 @@ elif st.session_state.step == 3:
     else:
         for idx, m in enumerate(list(st.session_state.spawned_monsters)):
             m_cols = st.columns([3, 2, 1])
-            monster_gold = m.get('gold', 1)  # Sécurité pour éviter le KeyError
+            monster_gold = m.get('gold', 1)
             
             m_cols[0].write(f"#{m['id']} {m['name']} ({m['hp']}/{m['max_hp']} PV) — 🪙 {monster_gold} PO")
             
-            if m_cols[1].button("Dégât 🗡️", key=f"m_dmg_{m['id']}_{idx}"):
+            # Utilisation de m['id'] unique pour éviter les doublons de clés
+            if m_cols[1].button("Dégât 🗡️", key=f"dmg_monster_{m['id']}"):
                 m['hp'] -= 1
                 if m['hp'] <= 0:
                     st.session_state.gold += monster_gold
                     st.toast(f"Monstre #{m['id']} ({m['name']}) vaincu ! +{monster_gold} PO de butin 🪙", icon="💰")
                     st.session_state.spawned_monsters.pop(idx)
+                st.rerun()
+                
+            if m_cols[2].button("🗑️", key=f"del_monster_{m['id']}"):
+                st.session_state.spawned_monsters.pop(idx)
                 st.rerun()
                 
             if m_cols[2].button("🗑️", key=f"m_del_{m['id']}_{idx}"):
