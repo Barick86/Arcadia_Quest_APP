@@ -37,41 +37,31 @@ def get_combined_data(selected_boxes):
 
 
 # ==========================================
-# ÉCRAN 1 : SÉLECTION DES BOÎTES & LEXIQUE
+# ÉCRAN 1 : ACCUEIL & BOÎTE ACTIVE (Restauré à l'identique)
 # ==========================================
 if st.session_state.step == 1:
     st.title("⚔️ ARCADIA COOP DRIVER ⚔️")
-    st.subheader("1. Gestion des Boîtes & Extensions")
+    st.subheader("Matériel Actif")
     
-    base_checked = st.checkbox("Boîte de Base Arcadia Quest", value=('base' in st.session_state.selected_boxes))
+    col_img, col_info = st.columns([1, 2])
+    with col_img:
+        box_image_path = base.BOX_INFO["image"]
+        if os.path.exists(box_image_path):
+            st.image(box_image_path, use_container_width=True)
+        else:
+            st.markdown("📦 **[ Image Boîte de Base ]**\n*(Place ton image dans assets/images/boite_base.jpg)*")
+            
+    with col_info:
+        st.success("**Boîte de Base sélectionnée (Mode Isolé)**")
+        st.write("• **12 Héros** officiels disponibles")
+        st.write("• **11 Scénarios** de campagne d'origine")
+        st.write("• Bestiaire complet (Gobelins, Orcs, Sœurs, Hommes-Bêtes, Trolls, Minotaure, Lord Fang)")
     
-    if base_checked and 'base' not in st.session_state.selected_boxes:
-        st.session_state.selected_boxes.append('base')
-    elif not base_checked and 'base' in st.session_state.selected_boxes:
-        st.session_state.selected_boxes.remove('base')
-
-    # Affichage image de la boîte si présente
-    box_image_path = base.BOX_INFO["image"]
-    if os.path.exists(box_image_path):
-        st.image(box_image_path, use_container_width=True)
-
-    with st.expander("📦 Inspecter le contenu & Lexique de la Boîte de Base"):
-        st.markdown(f"**Description :** {base.BOX_INFO['description']}")
-        st.markdown(f"• **Héros inclus (12) :** {', '.join(base.HEROES.keys())}")
-        st.markdown(f"• **Monstres & Boss (10) :** {', '.join(base.MONSTERS.keys())}")
-        
-        st.markdown("### 📖 Lexique des Capacités")
-        for k, v in base.LEXICON.items():
-            st.markdown(f"- **{k}** : {v}")
-
     st.divider()
     
-    if not st.session_state.selected_boxes:
-        st.warning("Veuillez sélectionner au moins une boîte pour continuer.")
-    else:
-        if st.button("CONTINUER VERS LA CONFIGURATION ➔", use_container_width=True):
-            st.session_state.step = 2
-            st.rerun()
+    if st.button("CONFIGURER SCÉNARIO & HÉROS ➔", use_container_width=True):
+        st.session_state.step = 2
+        st.rerun()
 
 
 # ==========================================
@@ -101,12 +91,11 @@ elif st.session_state.step == 2:
     st.divider()
 
     # --- 2. Sélection des Héros avec Info-bulles (Tooltips) ---
-    st.subheader("2. Sélection des Héros Engagés")
+    st.subheader("2. Sélection des Héros Engagés (1 à 4+ engagés)")
     st.caption("Survolez (ou touchez) les icônes d'aide ℹ️ pour afficher les détails des compétences et dés.")
     
     selected_this_screen = []
     for h_name, h_data in all_heroes.items():
-        # Construction du texte d'aide (tooltip natif Streamlit)
         tooltip_text = (
             f"Attaque : {h_data['att']}\n"
             f"Défense : {h_data['def']}\n"
@@ -114,7 +103,6 @@ elif st.session_state.step == 2:
             f"Pouvoir ({h_data['ability']}) :\n{h_data['ability_desc']}"
         )
         
-        # Affichage du checkbox avec info-bulle intégrée
         if st.checkbox(f"**{h_name}** — Pouvoir : {h_data['ability']}", key=f"hero_sel_{h_name}", help=tooltip_text):
             selected_this_screen.append(h_name)
             
@@ -126,7 +114,7 @@ elif st.session_state.step == 2:
             st.session_state.step = 1
             st.rerun()
     with col2:
-        if st.button("LANCER LE TABLEAU DE BORD ➔", use_container_width=True):
+        if st.button("LANCER LA PARTIE ➔", use_container_width=True):
             if not selected_this_screen:
                 st.error("Sélectionnez au moins un héros !")
             else:
@@ -203,7 +191,7 @@ elif st.session_state.step == 3:
     
     # --- MOTEUR IA ---
     st.subheader("🤖 Moteur IA - Ciblage Prioritaire")
-    if st.button("Calculer la Cible (Héros le plus faible en PV)", use_count_width=True if 'use_container_width' in globals() else True):
+    if st.button("Calculer la Cible (Héros le plus faible en PV)", use_container_width=True):
         alive_heroes = {h: d for h, d in st.session_state.active_heroes.items() if d['hp'] > 0}
         if alive_heroes:
             min_hp = min(d['hp'] for d in alive_heroes.values())
