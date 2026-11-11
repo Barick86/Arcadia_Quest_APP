@@ -140,10 +140,7 @@ elif st.session_state.step == 2:
                         'image': all_heroes[h]['image']
                     } for h in selected_this_screen
                 }
-                st.session_state.spawned_monsters = [
-                    {'id': 1, 'name': 'Gobelin Archer', 'hp': 2, 'max_hp': 2},
-                    {'id': 2, 'name': 'Orc Maraudeur', 'hp': 3, 'max_hp': 3}
-                ]
+                st.session_state.spawned_monsters = []  # <-- Plateau strictement vide au démarrage
                 st.session_state.step = 3
                 st.rerun()
 
@@ -227,21 +224,25 @@ elif st.session_state.step == 3:
         })
         st.rerun()
         
-    if not st.session_state.spawned_monsters:
+    iif not st.session_state.spawned_monsters:
         st.caption("Aucun monstre sur le plateau (Plateau vide).")
     else:
         for idx, m in enumerate(list(st.session_state.spawned_monsters)):
             m_cols = st.columns([3, 2, 1])
-            gold_val = m.get('gold', 1)
-            m_cols[0].write(f"#{m['id']} {m['name']} ({m['hp']}/{m['max_hp']} PV) — 🪙 {gold_val} PO")
+            monster_gold = m.get('gold', 1)  # Sécurité pour éviter le KeyError
+            
+            m_cols[0].write(f"#{m['id']} {m['name']} ({m['hp']}/{m['max_hp']} PV) — 🪙 {monster_gold} PO")
             
             if m_cols[1].button("Dégât 🗡️", key=f"m_dmg_{m['id']}_{idx}"):
                 m['hp'] -= 1
                 if m['hp'] <= 0:
-                    # Le monstre meurt, on récupère son or et on le supprime
-                    st.session_state.gold += m['gold']
-                    st.toast(f"Monstre #{m['id']} ({m['name']}) vaincu ! +{m['gold']} PO de butin 🪙", icon="💰")
+                    st.session_state.gold += monster_gold
+                    st.toast(f"Monstre #{m['id']} ({m['name']}) vaincu ! +{monster_gold} PO de butin 🪙", icon="💰")
                     st.session_state.spawned_monsters.pop(idx)
+                st.rerun()
+                
+            if m_cols[2].button("🗑️", key=f"m_del_{m['id']}_{idx}"):
+                st.session_state.spawned_monsters.pop(idx)
                 st.rerun()
                 
             if m_cols[2].button("🗑️", key=f"m_del_{m['id']}_{idx}"):
