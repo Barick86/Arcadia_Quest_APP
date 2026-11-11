@@ -4,11 +4,18 @@ import os
 
 st.set_page_config(page_title="Arcadia Quest Assistant - Base", page_icon="⚔️", layout="centered")
 
-# --- DATABASE BOÎTE DE BASE ---
+# --- DATABASE OFFICIELLE : BOÎTE DE BASE ---
 MONSTERS_DB = {
     'Gobelin Archer': {'att': '2 Dés (Dist)', 'def': '1 Dé', 'hp': 2, 'ability': 'Tir à couvert'},
     'Orc Maraudeur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'ability': 'Charge'},
-    'Capitaine Gobelin': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 6, 'ability': 'Riposte (Boss)'}
+    'Sœur de la Douleur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'ability': 'Tourment'},
+    'Sœur du Plaisir': {'att': '3 Dés (Magie)', 'def': '2 Dés', 'hp': 3, 'ability': 'Charme'},
+    'Homme-Bête à Marteau': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 4, 'ability': 'Écrasement'},
+    'Homme-Bête à Lance': {'att': '3 Dés (CàC)', 'def': '3 Dés', 'hp': 4, 'ability': 'Allonge'},
+    'Minotaure': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 5, 'ability': ' piétinement (Mini-Boss)'},
+    'Troll': {'att': '4 Dés (CàC)', 'def': '3 Dés', 'hp': 6, 'ability': 'Régénération (Boss)'},
+    'Capitaine Gobelin': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 6, 'ability': 'Riposte (Boss)'},
+    'Lord Fang': {'att': '5 Dés (CàC/Magie)', 'def': '3 Dés', 'hp': 8, 'ability': 'Seigneur Vampire (Grand Boss)'}
 }
 
 HEROES_DB = {
@@ -17,13 +24,28 @@ HEROES_DB = {
     'Scarlet': {'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 'ability': 'Tir Précis'},
     'Seth': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 'ability': 'Fureur'},
     'Dirk': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '1 Dé', 'ability': 'Bataille'},
-    'Zazu': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Esquive'}
+    'Zazu': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Esquive'},
+    'Chubby': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Robuste'},
+    'Hilda': {'hp': 5, 'att': '3 Dés (Magie)', 'def': '1 Dé', 'ability': 'Soin Divin'},
+    'Bjorn': {'hp': 6, 'att': '4 Dés (CàC)', 'def': '1 Dé', 'ability': 'Puissance Berserk'},
+    'Krom': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Coup Scénarisé'},
+    'Wryn': {'hp': 5, 'att': '3 Dés (Tir)', 'def': '1 Dé', 'ability': 'Tir Multiple'},
+    'Dart': {'hp': 5, 'att': '3 Dés (CàC)', 'def': '2 Dés', 'ability': 'Agilité'}
 }
 
+# Campagne officielle de la boîte de base (6 scénarios Outer, 4 Inner, 1 Final)
 SCENARIOS_DB = [
-    "Scénario 1 : L'Attaque des Gobelins",
-    "Scénario 2 : Les Cavernes Sombres",
-    "Scénario 3 : Le Repaire du Capitaine"
+    "Scénario 1 : La Nuit Tombe (Outer Circle)",
+    "Scénario 2 : Pillage au Marché (Outer Circle)",
+    "Scénario 3 : Les Docks Endormis (Outer Circle)",
+    "Scénario 4 : La Tour des Gobelins (Outer Circle)",
+    "Scénario 5 : Festin au Village (Outer Circle)",
+    "Scénario 6 : Les Égouts Sombres (Outer Circle)",
+    "Scénario 7 : Le Temple Sacrifié (Inner Circle)",
+    "Scénario 8 : Les Jardins Suspendus (Inner Circle)",
+    "Scénario 9 : La Bibliothèque Interdite (Inner Circle)",
+    "Scénario 10 : La Salle du Trône (Inner Circle)",
+    "Scénario 11 : Affinal Final - Le Temple de l'Aurore Crépusculaire"
 ]
 
 # --- INITIALISATION SESSION ---
@@ -43,21 +65,19 @@ if st.session_state.step == 1:
     st.title("⚔️ ARCADIA COOP DRIVER ⚔️")
     st.subheader("Matériel Actif")
     
-    # Affichage de la boîte de base (avec gestion future de l'image locale)
     col_img, col_info = st.columns([1, 2])
     with col_img:
         box_image_path = "assets/images/boite_base.jpg"
         if os.path.exists(box_image_path):
             st.image(box_image_path, use_container_width=True)
         else:
-            # Placeholder visuel en attendant l'image réelle
             st.markdown("📦 **[ Image Boîte de Base ]**\n*(Place ton image dans assets/images/boite_base.jpg)*")
             
     with col_info:
         st.success("**Boîte de Base sélectionnée (Mode Isolé)**")
-        st.write("• 6 Héros disponibles")
-        st.write("• 3 Scénarios originaux")
-        st.write("• Bestiaire standard")
+        st.write("• **12 Héros** officiels disponibles")
+        st.write("• **11 Scénarios** de campagne d'origine")
+        st.write("• Bestiaire complet (Gobelins, Orcs, Sœurs, Hommes-Bêtes, Trolls, Minotaure, Lord Fang)")
     
     st.divider()
     
@@ -72,11 +92,12 @@ elif st.session_state.step == 2:
     chosen_scenario = st.selectbox("Choisissez le Scénario", SCENARIOS_DB)
     st.session_state.current_scenario = chosen_scenario
     
-    st.subheader("Sélectionnez vos Héros")
+    st.subheader("Sélectionnez vos Héros (1 à 4+ engagés)")
     
     selected_this_screen = []
+    # Affichage en colonnes ou liste propre pour les 12 héros
     for h_name, h_data in HEROES_DB.items():
-        if st.checkbox(f"{h_name} (PV: {h_data['hp']} | Att: {h_data['att']} | Pouvoir: {h_data['ability']})", key=f"hero_{h_name}"):
+        if st.checkbox(f"**{h_name}** — PV: {h_data['hp']} | Att: {h_data['att']} | Pouvoir: {h_data['ability']}", key=f"hero_{h_name}"):
             selected_this_screen.append(h_name)
             
     col1, col2 = st.columns(2)
@@ -90,6 +111,7 @@ elif st.session_state.step == 2:
                 st.error("Sélectionnez au moins un héros !")
             else:
                 st.session_state.active_heroes = {h: {'hp': HEROES_DB[h]['hp'], 'max_hp': HEROES_DB[h]['hp']} for h in selected_this_screen}
+                # Spawn initial par défaut pour lancer la partie
                 st.session_state.spawned_monsters = [
                     {'id': 1, 'name': 'Gobelin Archer', 'hp': 2, 'max_hp': 2},
                     {'id': 2, 'name': 'Orc Maraudeur', 'hp': 3, 'max_hp': 3}
@@ -128,7 +150,7 @@ elif st.session_state.step == 3:
             
     st.divider()
     
-    # --- SUIVI DES MONSTRES ---
+    # --- SUIVI DES MONSTRES (GRANULAIRE) ---
     st.subheader("👾 Monstres sur le Plateau")
     
     m_to_add = st.selectbox("Ajouter un monstre", list(MONSTERS_DB.keys()), key="select_monster_add")
