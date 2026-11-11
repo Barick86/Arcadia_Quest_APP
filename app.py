@@ -59,14 +59,14 @@ if st.session_state.step == 1:
         st.success("**Boîte de Base sélectionnée (Mode Isolé)**")
         st.write("• **12 Héros** officiels disponibles")
         st.write("• **11 Scénarios** de campagne d'origine")
+        st.write("• **Bestiaire complet** (Gobelins, Orcs, Sœurs, Hommes-Bêtes, Trolls, Minotaure, Lord Fang)")
     
     st.divider()
     
     if st.button("CONFIGURER SCÉNARIO & HÉROS ➔", use_container_width=True):
         st.session_state.step = 2
         st.rerun()
-
-
+        
 # ==========================================
 # ÉCRAN 2 : SCÉNARIO & HÉROS (VIDE AU DÉMARRAGE)
 # ==========================================
