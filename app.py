@@ -65,7 +65,7 @@ if st.session_state.step == 1:
 
 
 # ==========================================
-# ÉCRAN 2 : SCÉNARIO & HÉROS (MULTISELECT & PHOTOS)
+# ÉCRAN 2 : SCÉNARIO & HÉROS (VIDE AU DÉMARRAGE)
 # ==========================================
 elif st.session_state.step == 2:
     st.title("🗺️ Configuration de la Partie")
@@ -89,36 +89,33 @@ elif st.session_state.step == 2:
 
     st.divider()
 
-    # --- 2. Sélection des Héros via Liste Déroulante (Multiselect) ---
+    # --- 2. Sélection des Héros via Liste Déroulante (Vide par défaut) ---
     st.subheader("2. Sélection des Héros Engagés")
     
     hero_options = list(all_heroes.keys())
     selected_this_screen = st.multiselect(
         "Choisissez vos héros (1 à 4+)", 
         hero_options,
-        default=['Maya', 'Grom']  # Sélection par défaut pour tester
+        default=[]  # <-- Aucun héros pré-sélectionné
     )
     
     # Affichage des cartes/photos et infos des héros sélectionnés
     if selected_this_screen:
         st.write("### 🃏 Cartes & Pouvoirs des Héros Sélectionnés")
-        cols = st.columns(min(len(selected_this_screen), 2)) # Grille de 2 colonnes max pour mobile/PC
+        cols = st.columns(min(len(selected_this_screen), 2))
         
         for idx, h_name in enumerate(selected_this_screen):
             h_data = all_heroes[h_name]
             with cols[idx % len(cols)]:
                 st.markdown(f"#### {h_name}")
                 
-                # Affichage de l'image de la carte si elle existe dans assets/images/
                 if os.path.exists(h_data['image']):
                     st.image(h_data['image'], use_container_width=True)
                 else:
                     st.warning(f"Image manquante : `{h_data['image']}`")
                 
-                # Détails textuels et capacités
                 st.write(f"❤️ **PV :** {h_data['hp']}")
-                st.write(f"⚔️ **Attaque :** {h_data['att']}")
-                st.write(f"🛡️ **Défense :** {h_data['def']}")
+                st.write(f"🛡️ **Défense :** {h_data['def']} Dé(s)")
                 st.info(f"✨ **Pouvoir ({h_data['ability']}) :**\n{h_data['ability_desc']}")
 
     st.divider()
