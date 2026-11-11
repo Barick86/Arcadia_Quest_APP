@@ -224,7 +224,7 @@ elif st.session_state.step == 3:
         })
         st.rerun()
         
-    iif not st.session_state.spawned_monsters:
+    if not st.session_state.spawned_monsters:
         st.caption("Aucun monstre sur le plateau (Plateau vide).")
     else:
         for idx, m in enumerate(list(st.session_state.spawned_monsters)):
