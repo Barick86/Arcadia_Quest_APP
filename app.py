@@ -223,16 +223,17 @@ elif st.session_state.step == 3:
             'name': m_to_add, 
             'hp': m_info['hp'], 
             'max_hp': m_info['hp'], 
-            'gold': m_info['gold']
+            'gold': m_info.get('gold', 1)
         })
         st.rerun()
-
+        
     if not st.session_state.spawned_monsters:
         st.caption("Aucun monstre sur le plateau (Plateau vide).")
     else:
         for idx, m in enumerate(list(st.session_state.spawned_monsters)):
             m_cols = st.columns([3, 2, 1])
-            m_cols[0].write(f"#{m['id']} {m['name']} ({m['hp']}/{m['max_hp']} PV) — 🪙 {m['gold']} PO")
+            gold_val = m.get('gold', 1)
+            m_cols[0].write(f"#{m['id']} {m['name']} ({m['hp']}/{m['max_hp']} PV) — 🪙 {gold_val} PO")
             
             if m_cols[1].button("Dégât 🗡️", key=f"m_dmg_{m['id']}_{idx}"):
                 m['hp'] -= 1
