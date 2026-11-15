@@ -68,7 +68,7 @@ if st.session_state.step == 1:
         st.rerun()
         
 # ==========================================
-# ÉCRAN 2 : SCÉNARIO & HÉROS (VIDE AU DÉMARRAGE)
+# ÉCRAN 2 : SCÉNARIO & HÉROS
 # ==========================================
 elif st.session_state.step == 2:
     st.title("🗺️ Configuration de la Partie")
@@ -92,17 +92,16 @@ elif st.session_state.step == 2:
 
     st.divider()
 
-    # --- 2. Sélection des Héros via Liste Déroulante (Vide par défaut) ---
+    # --- 2. Sélection des Héros ---
     st.subheader("2. Sélection des Héros Engagés")
     
     hero_options = list(all_heroes.keys())
     selected_this_screen = st.multiselect(
         "Choisissez vos héros (1 à 4+)", 
         hero_options,
-        default=[]  # <-- Aucun héros pré-sélectionné
+        default=[]
     )
     
-    # Affichage des cartes/photos et infos des héros sélectionnés
     if selected_this_screen:
         st.write("### 🃏 Cartes & Pouvoirs des Héros Sélectionnés")
         cols = st.columns(min(len(selected_this_screen), 2))
@@ -140,7 +139,7 @@ elif st.session_state.step == 2:
                         'image': all_heroes[h]['image']
                     } for h in selected_this_screen
                 }
-                st.session_state.spawned_monsters = []  # <-- Plateau strictement vide au démarrage
+                st.session_state.spawned_monsters = []
                 st.session_state.step = 3
                 st.rerun()
 
@@ -164,7 +163,7 @@ elif st.session_state.step == 3:
 
     st.divider()
     
-    # --- SUIVI DES HÉROS (AVEC MINI-PHOTOS & PV UNIQUEMENT) ---
+    # --- SUIVI DES HÉROS ---
     st.subheader("👥 Vos Héros")
     
     for h_name, data in list(st.session_state.active_heroes.items()):
@@ -190,10 +189,8 @@ elif st.session_state.step == 3:
                 st.rerun()
         st.divider()
 
-   # --- RECOMMANDATION DE SPAWN INTELLIGENTE PAR NIVEAU ---
+    # --- RECOMMANDATION DE SPAWN INTELLIGENTE PAR NIVEAU ---
     st.subheader("💡 Recommandation de Spawn (IA & Campagne)")
-    nb_heroes = len(st.session_state.active_heroes)
-    
     current_scen_data = next((s for s in base.SCENARIOS if s['name'] == st.session_state.current_scenario), None)
     scen_tier = current_scen_data.get('tier', 1) if current_scen_data else 1
     
@@ -221,7 +218,7 @@ elif st.session_state.step == 3:
         })
         st.rerun()
         
-   if not st.session_state.spawned_monsters:
+    if not st.session_state.spawned_monsters:
         st.caption("Aucun monstre sur le plateau (Plateau vide).")
     else:
         for idx, m in enumerate(list(st.session_state.spawned_monsters)):
