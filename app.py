@@ -68,17 +68,15 @@ if st.session_state.step == 1:
         st.rerun()
         
 # ==========================================
-# ÉCRAN 2 : SCÉNARIO & HÉROS (CONFIGURATION INITIALE)
+# ÉCRAN 2 : SCÉNARIO & HÉROS
 # ==========================================
 elif st.session_state.step == 2:
     st.title("🗺️ Configuration de la Partie")
     
     all_heroes, all_monsters, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     
-    # --- 1. Sélection du Scénario ---
     st.subheader("1. Choix du Scénario")
     scenario_names = [s['name'] for s in all_scenarios]
-    
     default_idx = min(st.session_state.campaign_scenario_index, len(scenario_names) - 1)
     chosen_scenario_name = st.selectbox("Sélectionnez le scénario", scenario_names, index=default_idx)
     st.session_state.current_scenario = chosen_scenario_name
@@ -94,17 +92,11 @@ elif st.session_state.step == 2:
 
     st.divider()
 
-    # --- 2. Sélection des Héros ---
     st.subheader("2. Sélection des Héros Engagés")
-    
     hero_options = list(all_heroes.keys())
     default_heroes = list(st.session_state.active_heroes.keys()) if st.session_state.active_heroes else []
     
-    selected_this_screen = st.multiselect(
-        "Choisissez vos héros (1 à 4+)", 
-        hero_options,
-        default=default_heroes
-    )
+    selected_this_screen = st.multiselect("Choisissez vos héros (1 à 4+)", hero_options, default=default_heroes)
     
     if selected_this_screen:
         st.write("### 🃏 Cartes & Pouvoirs des Héros Sélectionnés")
@@ -133,11 +125,7 @@ elif st.session_state.step == 2:
             if not selected_this_screen:
                 st.error("Sélectionnez au moins un héros !")
             else:
-                st.session_state.active_heroes = {
-                    h: {
-                        'image': all_heroes[h]['image']
-                    } for h in selected_this_screen
-                }
+                st.session_state.active_heroes = {h: {'image': all_heroes[h]['image']} for h in selected_this_screen}
                 st.session_state.spawned_monsters = []
                 st.session_state.step = 3
                 st.rerun()
@@ -149,7 +137,6 @@ elif st.session_state.step == 3:
     st.title("🛡️ Tableau de Bord")
     st.caption(f"Scénario : **{st.session_state.current_scenario}**")
     
-    # --- MÉTRIQUES DE JEU (Tour, Menace, Or) ---
     col_t1, col_t2, col_t3 = st.columns(3)
     col_t1.metric("Tour", st.session_state.turn)
     col_t2.metric("Menace", st.session_state.threat)
@@ -167,7 +154,6 @@ elif st.session_state.step == 3:
 
     st.divider()
     
-    # --- RAPPEL DE LA GUILDE ENGAGÉE (SANS GESTION DE PV) ---
     st.subheader("👥 Guilde Active")
     cols_heroes = st.columns(min(len(st.session_state.active_heroes), 4))
     for idx, (h_name, data) in enumerate(st.session_state.active_heroes.items()):
@@ -178,7 +164,6 @@ elif st.session_state.step == 3:
 
     st.divider()
 
-    # --- RECOMMANDATION DE SPAWN & RAPPEL DU SCÉNARIO ---
     st.subheader("💡 Contexte & Objectif du Scénario")
     _, active_monsters_db, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
@@ -192,7 +177,6 @@ elif st.session_state.step == 3:
         f"👾 **Monstres prévus :** {', '.join(current_scen_data.get('monsters', []))}"
     )
 
-    # --- GESTION DU SPAWN AVEC SÉLECTEUR DE NIVEAU ---
     st.subheader("👾 Faire spawner un monstre")
     clean_monster_names = sorted(list(set([m.rsplit(' (', 1)[0] for m in active_monsters_db.keys()])))
     
@@ -220,7 +204,6 @@ elif st.session_state.step == 3:
         })
         st.rerun()
         
-    # --- PLATEAU ACTUEL ---
     st.markdown("### 📋 Monstres actifs sur le Plateau")
     if not st.session_state.spawned_monsters:
         st.caption("Aucun monstre sur le plateau (Plateau vide).")
@@ -257,15 +240,14 @@ elif st.session_state.step == 3:
 
     st.divider()
     
-    # --- MOTEUR IA DE CIBLAGE (FAIBLE VS FORT) ---
-    st.subheader("🤖 Moteur IA - Ciblage Prioritaire")
-    col_ai1, col_ai2 = st.columns(2)
-    
-    if col_ai1.button("Cible : PV le + FAIBLE", use_container_width=True):
-        st.info("🎯 *Indication physique : Ciblez le héros ayant le moins de PV sur votre plateau de jeu.*")
-
-    if col_ai2.button("Cible : PV le + FORT", use_container_width=True):
-        st.info("🎯 *Indication physique : Ciblez le héros ayant le plus de PV sur votre plateau de jeu.*")
+    # --- MOTEUR IA DE CIBLAGE FUSIONNÉ ---
+    st.subheader("🤖 Moteur IA - Ciblage Aléatoire")
+    if st.button("🎲 Tirer un type de ciblage aléatoire (Faible / Fort)", use_container_width=True):
+        strategy = random.choice(["FAIBLE", "FORT"])
+        if strategy == "FAIBLE":
+            st.success("🎯 **Ordre de l'IA :** Cibler en priorité le héros ayant le **moins de PV** sur votre plateau !")
+        else:
+            st.success("🎯 **Ordre de l'IA :** Cibler en priorité le héros ayant le **plus de PV** sur votre plateau !")
 
     st.divider()
     if st.button("🔄 Recommencer / Changer de Boîtes", use_container_width=True):
@@ -285,7 +267,6 @@ elif st.session_state.step == 4:
     st.title("🛒 Phase de Marché & Transition")
     st.success("Scénario précédent validé avec succès ! Il est temps de dépenser votre butin.")
     
-    # Affichage de l'or disponible avec outils de dépenses
     st.metric("Trésor de Guilde Disponible 🪙", f"{st.session_state.gold} PO")
     
     st.write("### 💸 Dépenser des PO (Achats de Marché)")
@@ -303,7 +284,6 @@ elif st.session_state.step == 4:
         st.session_state.gold -= 5
         st.rerun()
 
-    # Dépense personnalisée
     custom_cost = st.number_input("Ou dépenser un montant personnalisé de PO :", min_value=0, max_value=max(st.session_state.gold, 0), step=1)
     if st.button("Valider la dépense personnalisée", use_container_width=True):
         if custom_cost > 0 and st.session_state.gold >= custom_cost:
@@ -313,7 +293,6 @@ elif st.session_state.step == 4:
 
     st.divider()
     
-    # Détermination du niveau de carte de marché disponible selon le scénario passé
     _, _, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
     scen_tier = current_scen_data.get('tier', 1) if current_scen_data else 1
@@ -337,6 +316,5 @@ elif st.session_state.step == 4:
         st.session_state.spawned_monsters = []
         st.session_state.turn = 1
         st.session_state.threat = 1
-        # On passe directement à l'écran 3 sans repasser par l'écran 2 !
         st.session_state.step = 3
         st.rerun()
