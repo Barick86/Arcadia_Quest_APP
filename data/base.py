@@ -22,34 +22,76 @@ HEROES = {
     'Dart': {'hp': 5, 'def': 2, 'ability': 'Agilité', 'ability_desc': 'Traverse les cases occupées sans coup d\'opportunité.', 'image': 'assets/images/dart.jpg', 'box': 'base'}
 }
 
-# Bestiaire structuré avec les niveaux de cartes officiels (Niveau 1, 2, 3)
+# Bestiaire avec chemins d'images des cartes et badges de couleur par niveau
 MONSTERS = {
-    # --- NIVEAU 1 (Outer Circle - Scénarios 1 à 6) ---
-    'Gobelin Archer (Niv 1)': {'level': 1, 'hp': 2, 'gold': 1, 'ability': 'Tir à couvert', 'box': 'base'},
-    'Orc Maraudeur (Niv 1)': {'level': 1, 'hp': 3, 'gold': 1, 'ability': 'Charge', 'box': 'base'},
-    'Sœur de la Douleur (Niv 1)': {'level': 1, 'hp': 3, 'gold': 2, 'ability': 'Tourment', 'box': 'base'},
-    'Sœur du Plaisir (Niv 1)': {'level': 1, 'hp': 3, 'gold': 2, 'ability': 'Charme', 'box': 'base'},
-    'Capitaine Gobelin (Boss Niv 1)': {'level': 1, 'hp': 6, 'gold': 5, 'ability': 'Riposte', 'box': 'base'},
-    'Minotaure (Mini-Boss Niv 1)': {'level': 1, 'hp': 5, 'gold': 4, 'ability': 'Piétinement', 'box': 'base'},
-    'Troll (Boss Niv 1)': {'level': 1, 'hp': 6, 'gold': 5, 'ability': 'Régénération', 'box': 'base'},
+    # --- NIVEAU 1 (Cartes Vertes / Outer Circle) ---
+    'Gobelin Archer (Niv 1)': {
+        'level': 1, 'color_badge': '🟢 Niv 1', 'hp': 2, 'gold': 1, 
+        'ability': 'Tir à couvert', 'image': 'assets/cards/monsters/gobelin_archer_niv1.jpg', 'box': 'base'
+    },
+    'Orc Maraudeur (Niv 1)': {
+        'level': 1, 'color_badge': '🟢 Niv 1', 'hp': 3, 'gold': 1, 
+        'ability': 'Charge', 'image': 'assets/cards/monsters/orc_maraudeur_niv1.jpg', 'box': 'base'
+    },
+    'Sœur de la Douleur (Niv 1)': {
+        'level': 1, 'color_badge': '🟢 Niv 1', 'hp': 3, 'gold': 2, 
+        'ability': 'Tourment', 'image': 'assets/cards/monsters/soeur_douleur_niv1.jpg', 'box': 'base'
+    },
+    'Sœur du Plaisir (Niv 1)': {
+        'level': 1, 'color_badge': '🟢 Niv 1', 'hp': 3, 'gold': 2, 
+        'ability': 'Charme', 'image': 'assets/cards/monsters/soeur_plaisir_niv1.jpg', 'box': 'base'
+    },
+    'Capitaine Gobelin (Boss Niv 1)': {
+        'level': 1, 'color_badge': '🟢 Boss Niv 1', 'hp': 6, 'gold': 5, 
+        'ability': 'Riposte', 'image': 'assets/cards/monsters/capitaine_gobelin_niv1.jpg', 'box': 'base'
+    },
+    'Minotaure (Mini-Boss Niv 1)': {
+        'level': 1, 'color_badge': '🟢 Mini-Boss Niv 1', 'hp': 5, 'gold': 4, 
+        'ability': 'Piétinement', 'image': 'assets/cards/monsters/minotaure_niv1.jpg', 'box': 'base'
+    },
+    'Troll (Boss Niv 1)': {
+        'level': 1, 'color_badge': '🟢 Boss Niv 1', 'hp': 6, 'gold': 5, 
+        'ability': 'Régénération', 'image': 'assets/cards/monsters/troll_niv1.jpg', 'box': 'base'
+    },
 
-    # --- NIVEAU 2 (Inner Circle - Scénarios 7 à 10) ---
-    'Gobelin Archer (Niv 2)': {'level': 2, 'hp': 3, 'gold': 2, 'ability': 'Tir perçant', 'box': 'base'},
-    'Orc Maraudeur (Niv 2)': {'level': 2, 'hp': 4, 'gold': 2, 'ability': 'Frénésie', 'box': 'base'},
-    'Homme-Bête à Marteau (Niv 2)': {'level': 2, 'hp': 4, 'gold': 2, 'ability': 'Écrasement', 'box': 'base'},
-    'Homme-Bête à Lance (Niv 2)': {'level': 2, 'hp': 4, 'gold': 2, 'ability': 'Allonge', 'box': 'base'},
-    'Lord Fang (Grand Boss Niv 2)': {'level': 2, 'hp': 8, 'gold': 10, 'ability': 'Vampirisme', 'box': 'base'},
+    # --- NIVEAU 2 (Cartes Jaunes / Inner Circle) ---
+    'Gobelin Archer (Niv 2)': {
+        'level': 2, 'color_badge': '🟡 Niv 2', 'hp': 3, 'gold': 2, 
+        'ability': 'Tir perçant', 'image': 'assets/cards/monsters/gobelin_archer_niv2.jpg', 'box': 'base'
+    },
+    'Orc Maraudeur (Niv 2)': {
+        'level': 2, 'color_badge': '🟡 Niv 2', 'hp': 4, 'gold': 2, 
+        'ability': 'Frénésie', 'image': 'assets/cards/monsters/orc_maraudeur_niv2.jpg', 'box': 'base'
+    },
+    'Homme-Bête à Marteau (Niv 2)': {
+        'level': 2, 'color_badge': '🟡 Niv 2', 'hp': 4, 'gold': 2, 
+        'ability': 'Écrasement', 'image': 'assets/cards/monsters/homme_bete_marteau_niv2.jpg', 'box': 'base'
+    },
+    'Homme-Bête à Lance (Niv 2)': {
+        'level': 2, 'color_badge': '🟡 Niv 2', 'hp': 4, 'gold': 2, 
+        'ability': 'Allonge', 'image': 'assets/cards/monsters/homme_bete_lance_niv2.jpg', 'box': 'base'
+    },
+    'Lord Fang (Grand Boss Niv 2)': {
+        'level': 2, 'color_badge': '🟡 Grand Boss Niv 2', 'hp': 8, 'gold': 10, 
+        'ability': 'Vampirisme', 'image': 'assets/cards/monsters/lord_fang_niv2.jpg', 'box': 'base'
+    },
 
-    # --- NIVEAU 3 (Final - Scénario 11) ---
-    'Seigneur des Monstres (Niv 3)': {'level': 3, 'hp': 7, 'gold': 4, 'ability': 'Commandement suprême', 'box': 'base'},
-    'Lord Fang (Avatar Ultime Niv 3)': {'level': 3, 'hp': 10, 'gold': 15, 'ability': 'Immortalité', 'box': 'base'}
+    # --- NIVEAU 3 (Cartes Rouges / Temple de l'Aurore) ---
+    'Seigneur des Monstres (Niv 3)': {
+        'level': 3, 'color_badge': '🔴 Niv 3', 'hp': 7, 'gold': 4, 
+        'ability': 'Commandement suprême', 'image': 'assets/cards/monsters/seigneur_monstres_niv3.jpg', 'box': 'base'
+    },
+    'Lord Fang (Avatar Ultime Niv 3)': {
+        'level': 3, 'color_badge': '🔴 Boss Final Niv 3', 'hp': 10, 'gold': 15, 
+        'ability': 'Immortalité', 'image': 'assets/cards/monsters/lord_fang_niv3.jpg', 'box': 'base'
+    }
 }
 
 SCENARIOS = [
     {
         "name": "Scénario 1 : La Nuit Tombe (Outer Circle)", 
         "box": "base", 
-        "tier": 1, # Indique le cercle (1 = Outer, 2 = Inner, 3 = Final)
+        "tier": 1,
         "boss": "Capitaine Gobelin (Boss Niv 1)",
         "description": "Les gobelins envahissent les rues de la cité. Vos guildes doivent sécuriser les points stratégiques.",
         "objectives": "Éliminer le Capitaine Gobelin et sécuriser les objectifs.",
@@ -103,7 +145,7 @@ SCENARIOS = [
     {
         "name": "Scénario 7 : Le Temple Sacrifié (Inner Circle)", 
         "box": "base", 
-        "tier": 2, # Inner Circle -> Monstres de niveau 2 recommandés
+        "tier": 2,
         "boss": "Lord Fang (Grand Boss Niv 2)",
         "description": "L'influence maléfique de Lord Fang corrompt le sanctuaire.",
         "objectives": "Purifier le temple et affronter Lord Fang.",
@@ -133,13 +175,13 @@ SCENARIOS = [
         "tier": 2,
         "boss": "Lord Fang (Grand Boss Niv 2)",
         "description": "L'antre direct de Lord Fang.",
-        "objectives": "Percasser les défenses du Seigneur Vampire.",
+        "objectives": "Percer les défenses du Seigneur Vampire.",
         "monsters": ["Troll (Boss Niv 1)", "Minotaure (Mini-Boss Niv 1)", "Lord Fang (Grand Boss Niv 2)"]
     },
     {
         "name": "Scénario 11 : Affrontement Final - Le Temple de l'Aurore", 
         "box": "base", 
-        "tier": 3, # Niveau final
+        "tier": 3,
         "boss": "Lord Fang (Avatar Ultime Niv 3)",
         "description": "Le combat ultime pour sauver Arcadia.",
         "objectives": "Terrasser définitivement Lord Fang et ses armées.",
