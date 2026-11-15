@@ -121,21 +121,58 @@ elif st.session_state.step == 2:
             st.session_state.step = 1
             st.rerun()
     with col2:
-        if st.button("LANCER LA PARTIE ➔", use_container_width=True):
+        if st.button("VOIR LA MISE EN PLACE DU PLATEAU ➔", use_container_width=True):
             if not selected_this_screen:
                 st.error("Sélectionnez au moins un héros !")
             else:
                 st.session_state.active_heroes = {h: {'image': all_heroes[h]['image']} for h in selected_this_screen}
                 st.session_state.spawned_monsters = []
-                st.session_state.step = 3
+                st.session_state.step = 3 # Redirige vers le nouvel écran de Setup
                 st.rerun()
 
 # ==========================================
-# ÉCRAN 3 : TABLEAU DE BORD DE JEU
+# ÉCRAN 3 : MISE EN PLACE (MAP SETUP)
 # ==========================================
 elif st.session_state.step == 3:
-    st.title("🛡️ Tableau de Bord")
+    st.title("🛠️ Mise en Place du Plateau (Setup)")
     st.caption(f"Scénario : **{st.session_state.current_scenario}**")
+    
+    _, _, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
+    current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
+    
+    st.info("🗺️ Cet écran vous guide dans l'installation physique de la carte, des portes fermées et des jetons avant de démarrer.")
+    
+    # Emplacement pour l'image de la map de tuiles
+    map_image_path = f"assets/maps/scenario_{st.session_state.campaign_scenario_index + 1}.jpg"
+    if os.path.exists(map_image_path):
+        st.image(map_image_path, use_container_width=True, caption="Agencement officiel des tuiles")
+    else:
+    # Si l'image n'est pas encore créée, on affiche une boîte d'aide visuelle
+        st.warning(f"📸 *Image de la carte non trouvée dans `{map_image_path}`. Référez-vous à votre livret de règles pour l'agencement des tuiles du scénario {st.session_state.campaign_scenario_index + 1}.*")
+
+    st.subheader("📌 Éléments à positionner sur la Map :")
+    st.write("• **Portes fermées :** Positionnez les portes verrouillées selon le plan du scénario.")
+    st.write("• **Jetons de Quête / Trésors :** Placez les jetons objectifs et coffres indiqués.")
+    st.write(f"• **Monstres initiaux :** Préparez les premiers monstres du scénario : *{', '.join(current_scen_data.get('monsters', []))}*")
+
+    st.divider()
+
+    col_s1, col_s2 = st.columns(2)
+    with col_s1:
+        if st.button("⬅️ Retour Configuration", use_container_width=True):
+            st.session_state.step = 2
+            st.rerun()
+    with col_s2:
+        if st.button("LANCER LE TABLEAU DE BORD LIVE ➔", use_container_width=True):
+            st.session_state.step = 4
+            st.rerun()
+
+# ==========================================
+# ÉCRAN 4 : TABLEAU DE BORD DE JEU (LIVE)
+# ==========================================
+elif st.session_state.step == 4:
+    st.title("🛡️ Tableau de Bord")
+    st.caption(f"Scénario en cours : **{st.session_state.current_scenario}**")
     
     col_t1, col_t2, col_t3 = st.columns(3)
     col_t1.metric("Tour", st.session_state.turn)
@@ -149,7 +186,7 @@ elif st.session_state.step == 3:
         st.rerun()
         
     if col_bt2.button("🏁 Terminer ce Scénario (Marché)", use_container_width=True):
-        st.session_state.step = 4
+        st.session_state.step = 5
         st.rerun()
 
     st.divider()
@@ -164,7 +201,7 @@ elif st.session_state.step == 3:
 
     st.divider()
 
-    st.subheader("💡 Contexte & Objectif du Scénario")
+    st.subheader("💡 Objectif & Rappel")
     _, active_monsters_db, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
     scen_tier = current_scen_data.get('tier', 1) if current_scen_data else 1
@@ -173,8 +210,7 @@ elif st.session_state.step == 3:
         f"📜 **Objectif :** {current_scen_data.get('objectives', 'Accomplir la quête principale.')}\n\n"
         f"⚙️ **Cercle de Campagne :** Niveau {scen_tier} "
         f"({'Outer Circle - Recommandé Niv 1' if scen_tier == 1 else 'Inner Circle - Recommandé Niv 2' if scen_tier == 2 else 'Temple de l\'Aurore - Recommandé Niv 3'}).\n\n"
-        f"🎯 **Boss :** {current_scen_data.get('boss', 'Boss de fin')}\n\n"
-        f"👾 **Monstres prévus :** {', '.join(current_scen_data.get('monsters', []))}"
+        f"🎯 **Boss :** {current_scen_data.get('boss', 'Boss de fin')}"
     )
 
     st.subheader("👾 Faire spawner un monstre")
@@ -240,7 +276,6 @@ elif st.session_state.step == 3:
 
     st.divider()
     
-    # --- MOTEUR IA DE CIBLAGE FUSIONNÉ ---
     st.subheader("🤖 Moteur IA - Ciblage Aléatoire")
     if st.button("🎲 Tirer un type de ciblage aléatoire (Faible / Fort)", use_container_width=True):
         strategy = random.choice(["FAIBLE", "FORT"])
@@ -261,9 +296,9 @@ elif st.session_state.step == 3:
         st.rerun()
 
 # ==========================================
-# ÉCRAN 4 : PHASE DE MARCHÉ & TRANSITION
+# ÉCRAN 5 : PHASE DE MARCHÉ & TRANSITION
 # ==========================================
-elif st.session_state.step == 4:
+elif st.session_state.step == 5:
     st.title("🛒 Phase de Marché & Transition")
     st.success("Scénario précédent validé avec succès ! Il est temps de dépenser votre butin.")
     
@@ -310,11 +345,11 @@ elif st.session_state.step == 4:
     
     st.divider()
     
-    if st.button("🚀 LANCER DIRECTEMENT LE PROCHAIN SCÉNARIO ➔", use_container_width=True):
+    if st.button("🚀 LANCER LA MISE EN PLACE DU PROCHAIN SCÉNARIO ➔", use_container_width=True):
         st.session_state.current_scenario = chosen_next_scenario
         st.session_state.campaign_scenario_index = scenario_names.index(chosen_next_scenario)
         st.session_state.spawned_monsters = []
         st.session_state.turn = 1
         st.session_state.threat = 1
-        st.session_state.step = 3
+        st.session_state.step = 3 # Redirige vers l'écran de Setup (Écran 3) pour installer la nouvelle map !
         st.rerun()
