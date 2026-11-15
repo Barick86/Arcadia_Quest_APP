@@ -68,7 +68,7 @@ if st.session_state.step == 1:
         st.rerun()
         
 # ==========================================
-# ÉCRAN 2 : SCÉNARIO & HÉROS
+# ÉCRAN 2 : SCÉNARIO & HÉROS (CONFIGURATION INITIALE)
 # ==========================================
 elif st.session_state.step == 2:
     st.title("🗺️ Configuration de la Partie")
@@ -79,7 +79,6 @@ elif st.session_state.step == 2:
     st.subheader("1. Choix du Scénario")
     scenario_names = [s['name'] for s in all_scenarios]
     
-    # Index par défaut basé sur l'état de la campagne si on vient du marché
     default_idx = min(st.session_state.campaign_scenario_index, len(scenario_names) - 1)
     chosen_scenario_name = st.selectbox("Sélectionnez le scénario", scenario_names, index=default_idx)
     st.session_state.current_scenario = chosen_scenario_name
@@ -99,8 +98,6 @@ elif st.session_state.step == 2:
     st.subheader("2. Sélection des Héros Engagés")
     
     hero_options = list(all_heroes.keys())
-    
-    # Si des héros sont déjà en mémoire (suite à un changement de scénario), on les pré-sélectionne !
     default_heroes = list(st.session_state.active_heroes.keys()) if st.session_state.active_heroes else []
     
     selected_this_screen = st.multiselect(
@@ -121,7 +118,6 @@ elif st.session_state.step == 2:
                     st.image(h_data['image'], use_container_width=True)
                 else:
                     st.warning(f"Image manquante : `{h_data['image']}`")
-                st.write(f"❤️ **PV :** {h_data['hp']}")
                 st.write(f"🛡️ **Défense :** {h_data['def']} Dé(s)")
                 st.info(f"✨ **Pouvoir ({h_data['ability']}) :**\n{h_data['ability_desc']}")
 
@@ -137,18 +133,11 @@ elif st.session_state.step == 2:
             if not selected_this_screen:
                 st.error("Sélectionnez au moins un héros !")
             else:
-                # Conserve les PV actuels si les héros existaient déjà, sinon initialise au max
-                updated_heroes = {}
-                for h in selected_this_screen:
-                    if h in st.session_state.active_heroes:
-                        updated_heroes[h] = st.session_state.active_heroes[h] # Conserve les PV actuels
-                    else:
-                        updated_heroes[h] = {
-                            'hp': all_heroes[h]['hp'], 
-                            'max_hp': all_heroes[h]['hp'],
-                            'image': all_heroes[h]['image']
-                        }
-                st.session_state.active_heroes = updated_heroes
+                st.session_state.active_heroes = {
+                    h: {
+                        'image': all_heroes[h]['image']
+                    } for h in selected_this_screen
+                }
                 st.session_state.spawned_monsters = []
                 st.session_state.step = 3
                 st.rerun()
@@ -172,37 +161,26 @@ elif st.session_state.step == 3:
         st.session_state.threat += 1
         st.rerun()
         
-    if col_bt2.button("🏁 Terminer ce Scénario (Phase Marché)", use_container_width=True):
+    if col_bt2.button("🏁 Terminer ce Scénario (Marché)", use_container_width=True):
         st.session_state.step = 4
         st.rerun()
 
     st.divider()
     
-    # --- SUIVI DES HÉROS ---
-    st.subheader("👥 Vos Héros")
-    for h_name, data in list(st.session_state.active_heroes.items()):
-        col_img, col_txt, col_btns = st.columns([1, 2, 2])
-        with col_img:
+    # --- RAPPEL DE LA GUILDE ENGAGÉE (SANS GESTION DE PV) ---
+    st.subheader("👥 Guilde Active")
+    cols_heroes = st.columns(min(len(st.session_state.active_heroes), 4))
+    for idx, (h_name, data) in enumerate(st.session_state.active_heroes.items()):
+        with cols_heroes[idx % len(cols_heroes)]:
             if os.path.exists(data['image']):
                 st.image(data['image'], use_container_width=True)
-            else:
-                st.write(f"**{h_name}**")
-        with col_txt:
-            st.markdown(f"#### {h_name}")
-            st.write(f"❤️ **PV :** {data['hp']} / {data['max_hp']}")
-        with col_btns:
-            c_min, c_plus = st.columns(2)
-            if c_min.button("➖", key=f"h_min_{h_name}") and data['hp'] > 0:
-                data['hp'] -= 1
-                st.rerun()
-            if c_plus.button("➕", key=f"h_plus_{h_name}") and data['hp'] < data['max_hp']:
-                data['hp'] += 1
-                st.rerun()
-        st.divider()
+            st.markdown(f"<p align='center'><b>{h_name}</b></p>", unsafe_allow_html=True)
+
+    st.divider()
 
     # --- RECOMMANDATION DE SPAWN & RAPPEL DU SCÉNARIO ---
     st.subheader("💡 Contexte & Objectif du Scénario")
-    all_heroes, active_monsters_db, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
+    _, active_monsters_db, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
     scen_tier = current_scen_data.get('tier', 1) if current_scen_data else 1
     
@@ -284,24 +262,10 @@ elif st.session_state.step == 3:
     col_ai1, col_ai2 = st.columns(2)
     
     if col_ai1.button("Cible : PV le + FAIBLE", use_container_width=True):
-        alive_heroes = {h: d for h, d in st.session_state.active_heroes.items() if d['hp'] > 0}
-        if alive_heroes:
-            min_hp = min(d['hp'] for d in alive_heroes.values())
-            candidates = [h for h, d in alive_heroes.items() if d['hp'] == min_hp]
-            target = random.choice(candidates)
-            st.success(f"🎯 Cible faible désignée : **{target}** ({min_hp} PV) !")
-        else:
-            st.error("Tous les héros sont KO !")
+        st.info("🎯 *Indication physique : Ciblez le héros ayant le moins de PV sur votre plateau de jeu.*")
 
     if col_ai2.button("Cible : PV le + FORT", use_container_width=True):
-        alive_heroes = {h: d for h, d in st.session_state.active_heroes.items() if d['hp'] > 0}
-        if alive_heroes:
-            max_hp = max(d['hp'] for d in alive_heroes.values())
-            candidates = [h for h, d in alive_heroes.items() if d['hp'] == max_hp]
-            target = random.choice(candidates)
-            st.success(f"🎯 Cible forte désignée : **{target}** ({max_hp} PV) !")
-        else:
-            st.error("Tous les héros sont KO !")
+        st.info("🎯 *Indication physique : Ciblez le héros ayant le plus de PV sur votre plateau de jeu.*")
 
     st.divider()
     if st.button("🔄 Recommencer / Changer de Boîtes", use_container_width=True):
@@ -315,52 +279,64 @@ elif st.session_state.step == 3:
         st.rerun()
 
 # ==========================================
-# ÉCRAN 4 : PHASE DE MARCHÉ / TRANSITION
+# ÉCRAN 4 : PHASE DE MARCHÉ & TRANSITION
 # ==========================================
 elif st.session_state.step == 4:
     st.title("🛒 Phase de Marché & Transition")
-    st.success("Scénario précédent validé avec succès !")
+    st.success("Scénario précédent validé avec succès ! Il est temps de dépenser votre butin.")
     
-    # Affichage de l'or disponible
-    st.metric("Trésor de Guilde disponible 🪙", f"{st.session_state.gold} PO")
+    # Affichage de l'or disponible avec outils de dépenses
+    st.metric("Trésor de Guilde Disponible 🪙", f"{st.session_state.gold} PO")
     
-    # Détermination du niveau de carte de marché disponible selon le niveau du scénario passé
+    st.write("### 💸 Dépenser des PO (Achats de Marché)")
+    col_spend1, col_spend2, col_spend3, col_spend4 = st.columns(4)
+    if col_spend1.button("-1 PO", use_container_width=True) and st.session_state.gold >= 1:
+        st.session_state.gold -= 1
+        st.rerun()
+    if col_spend2.button("-2 PO", use_container_width=True) and st.session_state.gold >= 2:
+        st.session_state.gold -= 2
+        st.rerun()
+    if col_spend3.button("-3 PO", use_container_width=True) and st.session_state.gold >= 3:
+        st.session_state.gold -= 3
+        st.rerun()
+    if col_spend4.button("-5 PO", use_container_width=True) and st.session_state.gold >= 5:
+        st.session_state.gold -= 5
+        st.rerun()
+
+    # Dépense personnalisée
+    custom_cost = st.number_input("Ou dépenser un montant personnalisé de PO :", min_value=0, max_value=max(st.session_state.gold, 0), step=1)
+    if st.button("Valider la dépense personnalisée", use_container_width=True):
+        if custom_cost > 0 and st.session_state.gold >= custom_cost:
+            st.session_state.gold -= custom_cost
+            st.toast(f"Dépense de {custom_cost} PO effectuée !", icon="💸")
+            st.rerun()
+
+    st.divider()
+    
+    # Détermination du niveau de carte de marché disponible selon le scénario passé
     _, _, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
     scen_tier = current_scen_data.get('tier', 1) if current_scen_data else 1
-    
-    # Règle de marché standard Arcadia Quest
     market_level = min(scen_tier + 1, 3)
     
     st.info(
         f"🛍️ **Recommandation de Marché :** En raison de la fin du scénario (Cercle Niveau {scen_tier}), "
-        f"vous avez accès aux cartes d'équipement de **Marché de Niveau {market_level}**.\n\n"
-        "*(Dépensez l'or de guilde en achetant des armes, sorts ou objets pour vos héros avant de lancer le prochain scénario)*"
+        f"vous avez accès aux cartes d'équipement de **Marché de Niveau {market_level}**."
     )
     
-    st.subheader("🗺️ Préparation du Scénario Suivant")
+    st.subheader("🗺️ Choix du Scénario Suivant")
     scenario_names = [s['name'] for s in all_scenarios]
-    
-    # Propose par défaut le scénario suivant dans la liste
     next_default_idx = min(st.session_state.campaign_scenario_index + 1, len(scenario_names) - 1)
-    chosen_next_scenario = st.selectbox("Choisir la prochaine quête", scenario_names, index=next_default_idx)
+    chosen_next_scenario = st.selectbox("Sélectionnez la prochaine quête de la campagne", scenario_names, index=next_default_idx)
     
-    col_m1, col_m2 = st.columns(2)
-    with col_m1:
-        if st.button("👥 Gérer / Soigner les Héros", use_container_width=True):
-            # Remet les PV des héros au max pour la transition (ou laisse tel quel selon choix)
-            for h in st.session_state.active_heroes.values():
-                h['hp'] = h['max_hp']
-            st.toast("Les héros ont récupéré tous leurs PV pour la suite de la campagne !", icon="❤️")
-            st.rerun()
-            
-    with col_m2:
-        if st.button(" LANCER LE PROCHAIN SCÉNARIO ➔", use_container_width=True):
-            st.session_state.current_scenario = chosen_next_scenario
-            st.session_state.campaign_scenario_index = scenario_names.index(chosen_next_scenario)
-            st.session_state.spawned_monsters = []
-            st.session_state.turn = 1
-            st.session_state.threat = 1
-            # Note : On conserve st.session_state.gold et st.session_state.active_heroes !
-            st.session_state.step = 2 # Retour écran configuration pour valider/ajuster l'équipe
-            st.rerun()
+    st.divider()
+    
+    if st.button("🚀 LANCER DIRECTEMENT LE PROCHAIN SCÉNARIO ➔", use_container_width=True):
+        st.session_state.current_scenario = chosen_next_scenario
+        st.session_state.campaign_scenario_index = scenario_names.index(chosen_next_scenario)
+        st.session_state.spawned_monsters = []
+        st.session_state.turn = 1
+        st.session_state.threat = 1
+        # On passe directement à l'écran 3 sans repasser par l'écran 2 !
+        st.session_state.step = 3
+        st.rerun()
