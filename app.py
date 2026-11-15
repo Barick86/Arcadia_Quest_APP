@@ -190,21 +190,18 @@ elif st.session_state.step == 3:
                 st.rerun()
         st.divider()
 
-    # --- RECOMMANDATION DE SPAWN INTELLIGENTE ---
-    st.subheader("💡 Recommandation de Spawn (IA)")
+   # --- RECOMMANDATION DE SPAWN INTELLIGENTE PAR NIVEAU ---
+    st.subheader("💡 Recommandation de Spawn (IA & Campagne)")
     nb_heroes = len(st.session_state.active_heroes)
-    scen_idx = st.session_state.campaign_scenario_index
-    
-    # Facteur de difficulté/puissance basé sur l'équipement accumulé (progression des scénarios)
-    power_modifier = 1 + (scen_idx * 0.15)
-    rec_minions = max(2, int(nb_heroes * 1.5 * power_modifier))
     
     current_scen_data = next((s for s in base.SCENARIOS if s['name'] == st.session_state.current_scenario), None)
-    recommended_monster = current_scen_data['monsters'][0] if current_scen_data and current_scen_data['monsters'] else "Gobelin Archer"
+    scen_tier = current_scen_data.get('tier', 1) if current_scen_data else 1
     
     st.info(
-        f"📊 Pour **{nb_heroes} héros** engagés au **Scénario {scen_idx}** (Difficulté adaptée à votre équipement) :\n"
-        f"• Il est recommandé de faire spawner environ **{rec_minions} sbires** de type **{recommended_monster}** ou de préparer le boss **{current_scen_data['boss'] if current_scen_data else 'Boss'}**."
+        f"📜 **Objectif du Scénario :** {current_scen_data.get('objectives', 'Accomplir la quête principale.')}\n\n"
+        f"⚙️ **Difficulté de Campagne :** Cercle de Niveau {scen_tier} "
+        f"({'Outer Circle - Cartes Niv 1' if scen_tier == 1 else 'Inner Circle - Cartes Niv 2' if scen_tier == 2 else 'Affrontement Final - Cartes Niv 3'}).\n\n"
+        f"🎯 **Boss Attendu :** {current_scen_data.get('boss', 'Boss de fin')}"
     )
 
     # --- SUIVI DES MONSTRES & GESTION DE L'OR ---
