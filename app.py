@@ -189,35 +189,62 @@ elif st.session_state.step == 3:
                 st.rerun()
         st.divider()
 
-    # --- RECOMMANDATION DE SPAWN INTELLIGENTE PAR NIVEAU ---
-    st.subheader("💡 Recommandation de Spawn (IA & Campagne)")
+    # --- RECOMMANDATION DE SPAWN & RAPPEL DU SCÉNARIO ---
+    st.subheader("💡 Contexte & Objectif du Scénario")
     current_scen_data = next((s for s in base.SCENARIOS if s['name'] == st.session_state.current_scenario), None)
     scen_tier = current_scen_data.get('tier', 1) if current_scen_data else 1
     
     st.info(
-        f"📜 **Objectif du Scénario :** {current_scen_data.get('objectives', 'Accomplir la quête principale.')}\n\n"
-        f"⚙️ **Difficulté de Campagne :** Cercle de Niveau {scen_tier} "
-        f"({'Outer Circle - Cartes Niv 1' if scen_tier == 1 else 'Inner Circle - Cartes Niv 2' if scen_tier == 2 else 'Affrontement Final - Cartes Niv 3'}).\n\n"
-        f"🎯 **Boss Attendu :** {current_scen_data.get('boss', 'Boss de fin')}"
+        f"📜 **Objectif :** {current_scen_data.get('objectives', 'Accomplir la quête principale.')}\n\n"
+        f"⚙️ **Cercle de Campagne :** Niveau {scen_tier} "
+        f"({'Outer Circle - Recommandé Niv 1' if scen_tier == 1 else 'Inner Circle - Recommandé Niv 2' if scen_tier == 2 else 'Temple de l\'Aurore - Recommandé Niv 3'}).\n\n"
+        f"🎯 **Boss :** {current_scen_data.get('boss', 'Boss de fin')}\n\n"
+        f"👾 **Monstres prévus pour ce scénario :** {', '.join(current_scen_data.get('monsters', []))}"
     )
 
-    # --- SUIVI DES MONSTRES & GESTION DE L'OR ---
-    st.subheader("👾 Monstres sur le Plateau")
+    # --- GESTION DU SPAWN AVEC SÉLECTEUR DE NIVEAU ---
+    st.subheader("👾 Faire spawner un monstre")
     _, active_monsters_db, _, _ = get_combined_data(st.session_state.selected_boxes)
     
-    m_to_add = st.selectbox("Ajouter un monstre (Sélection libre)", list(active_monsters_db.keys()), key="select_monster_add")
-    if st.button("Faire spawner ce monstre", use_container_width=True):
+    # On isole les familles de monstres de base (ex: "Gobelin Archer", "Orc Maraudeur", etc. sans le suffixe de niveau)
+    # Pour que tu puisses choisir le monstre puis son niveau indépendamment.
+    clean_monster_names = sorted(list(set([m.rsplit(' (', 1)[0] for m in active_monsters_db.keys()])))
+    
+    col_sel_m, col_sel_lvl = st.columns([2, 1])
+    with col_sel_m:
+        chosen_monster_base = st.selectbox("Famille de monstre", clean_monster_names, key="select_monster_family")
+    
+    with col_sel_lvl:
+        chosen_level = st.selectbox("Niveau de carte", [1, 2, 3], index=scen_tier-1, key="select_monster_level")
+
+    # On reconstitue la clé exacte dans la base de données selon le choix (ex: "Gobelin Archer (Niv 2)" ou adaptation)
+    # Cherchons dynamiquement le monstre correspondant dans le dictionnaire
+    matching_key = None
+    for k in active_monsters_db.keys():
+        if chosen_monster_base in k and f"Niv {chosen_level}" in k:
+            matching_key = k
+            break
+    if not matching_key:
+        # Fallback si le format de nom diffère un peu
+        matching_key = f"{chosen_monster_base} (Niv {chosen_level})"
+        if matching_key not in active_monsters_db:
+            matching_key = list(active_monsters_db.keys())[0]
+
+    if st.button(f"Faire spawner : {matching_key}", use_container_width=True):
         new_id = (st.session_state.spawned_monsters[-1]['id'] + 1) if st.session_state.spawned_monsters else 1
-        m_info = active_monsters_db[m_to_add]
+        m_info = active_monsters_db.get(matching_key, {'hp': 3, 'gold': 1, 'color_badge': f'🟢 Niv {chosen_level}', 'ability': 'Standard'})
+        
         st.session_state.spawned_monsters.append({
             'id': new_id, 
-            'name': m_to_add, 
+            'name': matching_key, 
             'hp': m_info['hp'], 
             'max_hp': m_info['hp'], 
             'gold': m_info.get('gold', 1)
         })
         st.rerun()
         
+    # --- PLATEAU ACTUEL ---
+    st.markdown("### 📋 Monstres actifs sur le Plateau")
     if not st.session_state.spawned_monsters:
         st.caption("Aucun monstre sur le plateau (Plateau vide).")
     else:
@@ -244,7 +271,6 @@ elif st.session_state.step == 3:
                     st.session_state.spawned_monsters.pop(idx)
                     st.rerun()
 
-                # Aperçu unique de la carte officielle et capacité
                 with st.expander(f"🃏 Carte & Capacité ({ability})"):
                     if card_image and os.path.exists(card_image):
                         st.image(card_image, width=250)
@@ -266,7 +292,7 @@ elif st.session_state.step == 3:
         else:
             st.error("Tous les héros sont KO !")
 
-    st.divider()
+nos st.divider()
     if st.button("🔄 Recommencer / Changer de Boîtes", use_container_width=True):
         st.session_state.step = 1
         st.session_state.spawned_monsters = []
