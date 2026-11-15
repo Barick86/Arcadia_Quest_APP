@@ -127,7 +127,7 @@ elif st.session_state.step == 2:
             else:
                 st.session_state.active_heroes = {h: {'image': all_heroes[h]['image']} for h in selected_this_screen}
                 st.session_state.spawned_monsters = []
-                st.session_state.step = 3 # Redirige vers le nouvel écran de Setup
+                st.session_state.step = 3
                 st.rerun()
 
 # ==========================================
@@ -142,12 +142,10 @@ elif st.session_state.step == 3:
     
     st.info("🗺️ Cet écran vous guide dans l'installation physique de la carte, des portes fermées et des jetons avant de démarrer.")
     
-    # Emplacement pour l'image de la map de tuiles
     map_image_path = f"assets/maps/scenario_{st.session_state.campaign_scenario_index + 1}.jpg"
     if os.path.exists(map_image_path):
         st.image(map_image_path, use_container_width=True, caption="Agencement officiel des tuiles")
     else:
-    # Si l'image n'est pas encore créée, on affiche une boîte d'aide visuelle
         st.warning(f"📸 *Image de la carte non trouvée dans `{map_image_path}`. Référez-vous à votre livret de règles pour l'agencement des tuiles du scénario {st.session_state.campaign_scenario_index + 1}.*")
 
     st.subheader("📌 Éléments à positionner sur la Map :")
@@ -201,7 +199,8 @@ elif st.session_state.step == 4:
 
     st.divider()
 
-    st.subheader("💡 Objectif & Rappel")
+    # --- RAPPEL DU SCÉNARIO & MONSTRES DU SCÉNARIO (RESTAURÉ) ---
+    st.subheader("💡 Objectif & Monstres du Scénario")
     _, active_monsters_db, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
     scen_tier = current_scen_data.get('tier', 1) if current_scen_data else 1
@@ -210,7 +209,8 @@ elif st.session_state.step == 4:
         f"📜 **Objectif :** {current_scen_data.get('objectives', 'Accomplir la quête principale.')}\n\n"
         f"⚙️ **Cercle de Campagne :** Niveau {scen_tier} "
         f"({'Outer Circle - Recommandé Niv 1' if scen_tier == 1 else 'Inner Circle - Recommandé Niv 2' if scen_tier == 2 else 'Temple de l\'Aurore - Recommandé Niv 3'}).\n\n"
-        f"🎯 **Boss :** {current_scen_data.get('boss', 'Boss de fin')}"
+        f"🎯 **Boss :** {current_scen_data.get('boss', 'Boss de fin')}\n\n"
+        f"👾 **Monstres prévus pour ce scénario :** {', '.join(current_scen_data.get('monsters', []))}"
     )
 
     st.subheader("👾 Faire spawner un monstre")
@@ -351,5 +351,5 @@ elif st.session_state.step == 5:
         st.session_state.spawned_monsters = []
         st.session_state.turn = 1
         st.session_state.threat = 1
-        st.session_state.step = 3 # Redirige vers l'écran de Setup (Écran 3) pour installer la nouvelle map !
+        st.session_state.step = 3
         st.rerun()
