@@ -221,7 +221,7 @@ elif st.session_state.step == 3:
         })
         st.rerun()
         
-    if not st.session_state.spawned_monsters:
+   if not st.session_state.spawned_monsters:
         st.caption("Aucun monstre sur le plateau (Plateau vide).")
     else:
         for idx, m in enumerate(list(st.session_state.spawned_monsters)):
@@ -235,7 +235,8 @@ elif st.session_state.step == 3:
                 m_cols = st.columns([3, 2, 1])
                 m_cols[0].markdown(f"**#{m['id']} {m['name']}** ({color_badge})<br>❤️ `{m['hp']}/{m['max_hp']} PV` — 🪙 `{monster_gold} PO`", unsafe_allow_html=True)
                 
-                if m_cols[1].button("Dégât 🗡️", key=f"dmg_monster_{m['id']}"):
+                # Clé unique combinant l'ID et l'index de position
+                if m_cols[1].button("Dégât 🗡️", key=f"dmg_mon_{m['id']}_{idx}"):
                     m['hp'] -= 1
                     if m['hp'] <= 0:
                         st.session_state.gold += monster_gold
@@ -243,9 +244,17 @@ elif st.session_state.step == 3:
                         st.session_state.spawned_monsters.pop(idx)
                     st.rerun()
                     
-                if m_cols[2].button("🗑️", key=f"del_monster_{m['id']}"):
+                # Clé unique combinant l'ID et l'index de position
+                if m_cols[2].button("🗑️", key=f"del_mon_{m['id']}_{idx}"):
                     st.session_state.spawned_monsters.pop(idx)
                     st.rerun()
+
+                with st.expander(f"🃏 Carte & Capacité ({ability})"):
+                    if card_image and os.path.exists(card_image):
+                        st.image(card_image, width=250)
+                    else:
+                        st.caption(f"Capacité spéciale : **{ability}**")
+                        st.caption(f"*(Image attendue : `{card_image}`)*")
 
                 # Aperçu de la carte officielle et capacité
                 with st.expander(f"🃏 Carte & Capacité ({ability})"):
