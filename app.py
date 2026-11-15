@@ -225,10 +225,35 @@ elif st.session_state.step == 3:
         st.caption("Aucun monstre sur le plateau (Plateau vide).")
     else:
         for idx, m in enumerate(list(st.session_state.spawned_monsters)):
-            m_cols = st.columns([3, 2, 1])
-            monster_gold = m.get('gold', 1)
-            
-            m_cols[0].write(f"#{m['id']} {m['name']} ({m['hp']}/{m['max_hp']} PV) — 🪙 {monster_gold} PO")
+            m_data = active_monsters_db.get(m['name'], {})
+            monster_gold = m.get('gold', m_data.get('gold', 1))
+            color_badge = m_data.get('color_badge', '🟢 Niv 1')
+            card_image = m_data.get('image', '')
+            ability = m_data.get('ability', 'Aucune')
+
+            with st.container(border=True):
+                m_cols = st.columns([3, 2, 1])
+                m_cols[0].markdown(f"**#{m['id']} {m['name']}** ({color_badge})<br>❤️ `{m['hp']}/{m['max_hp']} PV` — 🪙 `{monster_gold} PO`", unsafe_allow_html=True)
+                
+                if m_cols[1].button("Dégât 🗡️", key=f"dmg_monster_{m['id']}"):
+                    m['hp'] -= 1
+                    if m['hp'] <= 0:
+                        st.session_state.gold += monster_gold
+                        st.toast(f"Monstre #{m['id']} ({m['name']}) vaincu ! +{monster_gold} PO de butin 🪙", icon="💰")
+                        st.session_state.spawned_monsters.pop(idx)
+                    st.rerun()
+                    
+                if m_cols[2].button("🗑️", key=f"del_monster_{m['id']}"):
+                    st.session_state.spawned_monsters.pop(idx)
+                    st.rerun()
+
+                # Aperçu de la carte officielle et capacité
+                with st.expander(f"🃏 Carte & Capacité ({ability})"):
+                    if card_image and os.path.exists(card_image):
+                        st.image(card_image, width=250)
+                    else:
+                        st.caption(f"Capacité spéciale : **{ability}**")
+                        st.caption(f"*(Image attendue : `{card_image}`)*")
             
             # Utilisation de m['id'] unique pour éviter les doublons de clés
             if m_cols[1].button("Dégât 🗡️", key=f"dmg_monster_{m['id']}"):
