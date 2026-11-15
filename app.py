@@ -131,7 +131,7 @@ elif st.session_state.step == 2:
                 st.rerun()
 
 # ==========================================
-# ÉCRAN 3 : MISE EN PLACE (MAP SETUP)
+# ÉCRAN 3 : MISE EN PLACE (MAP SETUP) - PORTES & OBJETS
 # ==========================================
 elif st.session_state.step == 3:
     st.title("🛠️ Mise en Place du Plateau (Setup)")
@@ -140,18 +140,27 @@ elif st.session_state.step == 3:
     _, _, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
     
-    st.info("🗺️ Cet écran vous guide dans l'installation physique de la carte, des portes fermées et des jetons avant de démarrer.")
+    st.info("🗺️ Cet écran détaille les éléments physiques indispensables à positionner (portes fermées, jetons de quête, objectifs) pour ce scénario précis.")
     
+    # Emplacement image de map globale
     map_image_path = f"assets/maps/scenario_{st.session_state.campaign_scenario_index + 1}.jpg"
     if os.path.exists(map_image_path):
         st.image(map_image_path, use_container_width=True, caption="Agencement officiel des tuiles")
     else:
-        st.warning(f"📸 *Image de la carte non trouvée dans `{map_image_path}`. Référez-vous à votre livret de règles pour l'agencement des tuiles du scénario {st.session_state.campaign_scenario_index + 1}.*")
+        st.warning(f"📸 *Image de la carte non trouvée dans `{map_image_path}`. Référez-vous à votre livret de règles pour l'agencement des tuiles.*")
 
-    st.subheader("📌 Éléments à positionner sur la Map :")
-    st.write("• **Portes fermées :** Positionnez les portes verrouillées selon le plan du scénario.")
-    st.write("• **Jetons de Quête / Trésors :** Placez les jetons objectifs et coffres indiqués.")
-    st.write(f"• **Monstres initiaux :** Préparez les premiers monstres du scénario : *{', '.join(current_scen_data.get('monsters', []))}*")
+    st.subheader("🚪 Portes Fermées & Accès")
+    st.markdown("""
+    * **Portes verrouillées :** Placez les socles de portes fermées aux emplacements indiqués sur le plan du scénario pour bloquer les couloirs entre les tuiles.
+    * *Rappel de règle :* Une porte fermée nécessite une action de fouille/attaque ou un jeton spécifique pour être ouverte par les héros.
+    """)
+
+    st.subheader("💎 Jetons de Quêtes, Trésors & Objectifs")
+    if current_scen_data:
+        st.success(f"**Objectif Principal :** {current_scen_data.get('objectives', 'Accomplir les quêtes du scénario.')}")
+        st.write("• **Jetons d'objectifs / Quêtes :** Positionnez les jetons spécifiques de la quête sur les cases marquées sur le plateau.")
+        st.write("• **Coffres au trésor :** Disposez les jetons Trésor faces cachées dans les pièces requises.")
+        st.write(f"• **Boss / Monstres initiaux du scénario :** {', '.join(current_scen_data.get('monsters', []))}")
 
     st.divider()
 
@@ -199,7 +208,6 @@ elif st.session_state.step == 4:
 
     st.divider()
 
-    # --- RAPPEL DU SCÉNARIO & MONSTRES DU SCÉNARIO (RESTAURÉ) ---
     st.subheader("💡 Objectif & Monstres du Scénario")
     _, active_monsters_db, all_scenarios, _ = get_combined_data(st.session_state.selected_boxes)
     current_scen_data = next((s for s in all_scenarios if s['name'] == st.session_state.current_scenario), None)
