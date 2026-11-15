@@ -247,33 +247,13 @@ elif st.session_state.step == 3:
                     st.session_state.spawned_monsters.pop(idx)
                     st.rerun()
 
+                # Aperçu unique de la carte officielle et capacité
                 with st.expander(f"🃏 Carte & Capacité ({ability})"):
                     if card_image and os.path.exists(card_image):
                         st.image(card_image, width=250)
                     else:
                         st.caption(f"Capacité spéciale : **{ability}**")
                         st.caption(f"*(Image attendue : `{card_image}`)*")
-
-                # Aperçu de la carte officielle et capacité
-                with st.expander(f"🃏 Carte & Capacité ({ability})"):
-                    if card_image and os.path.exists(card_image):
-                        st.image(card_image, width=250)
-                    else:
-                        st.caption(f"Capacité spéciale : **{ability}**")
-                        st.caption(f"*(Image attendue : `{card_image}`)*")
-            
-            # Utilisation de m['id'] unique pour éviter les doublons de clés
-            if m_cols[1].button("Dégât 🗡️", key=f"dmg_monster_{m['id']}"):
-                m['hp'] -= 1
-                if m['hp'] <= 0:
-                    st.session_state.gold += monster_gold
-                    st.toast(f"Monstre #{m['id']} ({m['name']}) vaincu ! +{monster_gold} PO de butin 🪙", icon="💰")
-                    st.session_state.spawned_monsters.pop(idx)
-                st.rerun()
-                
-            if m_cols[2].button("🗑️", key=f"del_monster_{m['id']}"):
-                st.session_state.spawned_monsters.pop(idx)
-                st.rerun()
 
     st.divider()
     
