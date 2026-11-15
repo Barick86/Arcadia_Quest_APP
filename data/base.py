@@ -22,96 +22,128 @@ HEROES = {
     'Dart': {'hp': 5, 'def': 2, 'ability': 'Agilité', 'ability_desc': 'Traverse les cases occupées sans coup d\'opportunité.', 'image': 'assets/images/dart.jpg', 'box': 'base'}
 }
 
+# Bestiaire structuré avec les niveaux de cartes officiels (Niveau 1, 2, 3)
 MONSTERS = {
-    'Gobelin Archer': {'att': '2 Dés (Dist)', 'def': '1 Dé', 'hp': 2, 'gold': 1, 'ability': 'Tir à couvert', 'box': 'base'},
-    'Orc Maraudeur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'gold': 1, 'ability': 'Charge', 'box': 'base'},
-    'Sœur de la Douleur': {'att': '3 Dés (CàC)', 'def': '2 Dés', 'hp': 3, 'gold': 2, 'ability': 'Tourment', 'box': 'base'},
-    'Sœur du Plaisir': {'att': '3 Dés (Magie)', 'def': '2 Dés', 'hp': 3, 'gold': 2, 'ability': 'Charme', 'box': 'base'},
-    'Homme-Bête à Marteau': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 4, 'gold': 2, 'ability': 'Écrasement', 'box': 'base'},
-    'Homme-Bête à Lance': {'att': '3 Dés (CàC)', 'def': '3 Dés', 'hp': 4, 'gold': 2, 'ability': 'Allonge', 'box': 'base'},
-    'Minotaure': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 5, 'gold': 4, 'ability': 'Piétinement (Mini-Boss)', 'box': 'base'},
-    'Troll': {'att': '4 Dés (CàC)', 'def': '3 Dés', 'hp': 6, 'gold': 5, 'ability': 'Régénération (Boss)', 'box': 'base'},
-    'Capitaine Gobelin': {'att': '4 Dés (CàC)', 'def': '2 Dés', 'hp': 6, 'gold': 5, 'ability': 'Riposte (Boss)', 'box': 'base'},
-    'Lord Fang': {'att': '5 Dés (CàC/Magie)', 'def': '3 Dés', 'hp': 8, 'gold': 10, 'ability': 'Seigneur Vampire (Grand Boss)', 'box': 'base'}
+    # --- NIVEAU 1 (Outer Circle - Scénarios 1 à 6) ---
+    'Gobelin Archer (Niv 1)': {'level': 1, 'hp': 2, 'gold': 1, 'ability': 'Tir à couvert', 'box': 'base'},
+    'Orc Maraudeur (Niv 1)': {'level': 1, 'hp': 3, 'gold': 1, 'ability': 'Charge', 'box': 'base'},
+    'Sœur de la Douleur (Niv 1)': {'level': 1, 'hp': 3, 'gold': 2, 'ability': 'Tourment', 'box': 'base'},
+    'Sœur du Plaisir (Niv 1)': {'level': 1, 'hp': 3, 'gold': 2, 'ability': 'Charme', 'box': 'base'},
+    'Capitaine Gobelin (Boss Niv 1)': {'level': 1, 'hp': 6, 'gold': 5, 'ability': 'Riposte', 'box': 'base'},
+    'Minotaure (Mini-Boss Niv 1)': {'level': 1, 'hp': 5, 'gold': 4, 'ability': 'Piétinement', 'box': 'base'},
+    'Troll (Boss Niv 1)': {'level': 1, 'hp': 6, 'gold': 5, 'ability': 'Régénération', 'box': 'base'},
+
+    # --- NIVEAU 2 (Inner Circle - Scénarios 7 à 10) ---
+    'Gobelin Archer (Niv 2)': {'level': 2, 'hp': 3, 'gold': 2, 'ability': 'Tir perçant', 'box': 'base'},
+    'Orc Maraudeur (Niv 2)': {'level': 2, 'hp': 4, 'gold': 2, 'ability': 'Frénésie', 'box': 'base'},
+    'Homme-Bête à Marteau (Niv 2)': {'level': 2, 'hp': 4, 'gold': 2, 'ability': 'Écrasement', 'box': 'base'},
+    'Homme-Bête à Lance (Niv 2)': {'level': 2, 'hp': 4, 'gold': 2, 'ability': 'Allonge', 'box': 'base'},
+    'Lord Fang (Grand Boss Niv 2)': {'level': 2, 'hp': 8, 'gold': 10, 'ability': 'Vampirisme', 'box': 'base'},
+
+    # --- NIVEAU 3 (Final - Scénario 11) ---
+    'Seigneur des Monstres (Niv 3)': {'level': 3, 'hp': 7, 'gold': 4, 'ability': 'Commandement suprême', 'box': 'base'},
+    'Lord Fang (Avatar Ultime Niv 3)': {'level': 3, 'hp': 10, 'gold': 15, 'ability': 'Immortalité', 'box': 'base'}
 }
 
 SCENARIOS = [
     {
         "name": "Scénario 1 : La Nuit Tombe (Outer Circle)", 
         "box": "base", 
-        "boss": "Capitaine Gobelin",
-        "description": "Les gobelins envahissent les rues de la cité. Vos guildes doivent sécuriser les points stratégiques avant la tombée de la nuit.",
-        "monsters": ["Gobelin Archer", "Orc Maraudeur", "Capitaine Gobelin"]
+        "tier": 1, # Indique le cercle (1 = Outer, 2 = Inner, 3 = Final)
+        "boss": "Capitaine Gobelin (Boss Niv 1)",
+        "description": "Les gobelins envahissent les rues de la cité. Vos guildes doivent sécuriser les points stratégiques.",
+        "objectives": "Éliminer le Capitaine Gobelin et sécuriser les objectifs.",
+        "monsters": ["Gobelin Archer (Niv 1)", "Orc Maraudeur (Niv 1)", "Capitaine Gobelin (Boss Niv 1)"]
     },
     {
         "name": "Scénario 2 : Pillage au Marché (Outer Circle)", 
         "box": "base", 
-        "boss": "Minotaure",
-        "description": "Le marché central regorge de trésors abandonnés. Emparez-vous-en avant vos rivaux tout en matant la bête féroce qui y rôde.",
-        "monsters": ["Orc Maraudeur", "Sœur de la Douleur", "Minotaure"]
+        "tier": 1,
+        "boss": "Minotaure (Mini-Boss Niv 1)",
+        "description": "Le marché central regorge de trésors abandonnés.",
+        "objectives": "Piller les coffres et vaincre le Minotaure.",
+        "monsters": ["Orc Maraudeur (Niv 1)", "Sœur de la Douleur (Niv 1)", "Minotaure (Mini-Boss Niv 1)"]
     },
     {
         "name": "Scénario 3 : Les Docks Endormis (Outer Circle)", 
         "box": "base", 
-        "boss": "Troll",
-        "description": "Les entrepôts portuaires cachent de sombres secrets et un redoutable Troll qui bloque l'accès aux navires.",
-        "monsters": ["Gobelin Archer", "Homme-Bête à Marteau", "Troll"]
+        "tier": 1,
+        "boss": "Troll (Boss Niv 1)",
+        "description": "Les entrepôts portuaires cachent un redoutable Troll.",
+        "objectives": "Survivre et abattre le Troll.",
+        "monsters": ["Gobelin Archer (Niv 1)", "Homme-Bête à Marteau (Niv 2)", "Troll (Boss Niv 1)"]
     },
     {
         "name": "Scénario 4 : La Tour des Gobelins (Outer Circle)", 
         "box": "base", 
-        "boss": "Capitaine Gobelin",
-        "description": "Infiltrez le bastion fortifié des peaux-vertes pour déloger leur chef autoproclamé.",
-        "monsters": ["Gobelin Archer", "Orc Maraudeur", "Capitaine Gobelin"]
+        "tier": 1,
+        "boss": "Capitaine Gobelin (Boss Niv 1)",
+        "description": "Infiltrez le bastion fortifié des peaux-vertes.",
+        "objectives": "Nettoyer la tour de son chef.",
+        "monsters": ["Gobelin Archer (Niv 1)", "Orc Maraudeur (Niv 1)", "Capitaine Gobelin (Boss Niv 1)"]
     },
     {
         "name": "Scénario 5 : Festin au Village (Outer Circle)", 
         "box": "base", 
-        "boss": "Troll",
-        "description": "Les monstres célèbrent une victoire en plein air. Interrompez leur festin et survivez à leur férocité.",
-        "monsters": ["Homme-Bête à Lance", "Sœur du Plaisir", "Troll"]
+        "tier": 1,
+        "boss": "Troll (Boss Niv 1)",
+        "description": "Les monstres célèbrent une victoire en plein air.",
+        "objectives": "Disperser le festin et vaincre le Troll.",
+        "monsters": ["Homme-Bête à Lance (Niv 2)", "Sœur du Plaisir (Niv 1)", "Troll (Boss Niv 1)"]
     },
     {
         "name": "Scénario 6 : Les Égouts Sombres (Outer Circle)", 
         "box": "base", 
-        "boss": "Minotaure",
-        "description": "Naviguez dans les labyrinthes fangeux sous la ville où rôdent de monstrueuses créatures oubliées.",
-        "monsters": ["Orc Maraudeur", "Sœur de la Douleur", "Minotaure"]
+        "tier": 1,
+        "boss": "Minotaure (Mini-Boss Niv 1)",
+        "description": "Naviguez dans les labyrinthes fangeux sous la ville.",
+        "objectives": "Trouver la sortie et éliminer la bête.",
+        "monsters": ["Orc Maraudeur (Niv 1)", "Sœur de la Douleur (Niv 1)", "Minotaure (Mini-Boss Niv 1)"]
     },
     {
         "name": "Scénario 7 : Le Temple Sacrifié (Inner Circle)", 
         "box": "base", 
-        "boss": "Lord Fang",
-        "description": "L'influence maléfique de Lord Fang commence à corrompre le sanctuaire sacré d'Arcadia.",
-        "monsters": ["Sœur de la Douleur", "Sœur du Plaisir", "Lord Fang"]
+        "tier": 2, # Inner Circle -> Monstres de niveau 2 recommandés
+        "boss": "Lord Fang (Grand Boss Niv 2)",
+        "description": "L'influence maléfique de Lord Fang corrompt le sanctuaire.",
+        "objectives": "Purifier le temple et affronter Lord Fang.",
+        "monsters": ["Sœur de la Douleur (Niv 1)", "Sœur du Plaisir (Niv 1)", "Lord Fang (Grand Boss Niv 2)"]
     },
     {
         "name": "Scénario 8 : Les Jardins Suspendus (Inner Circle)", 
         "box": "base", 
-        "boss": "Lord Fang",
-        "description": "Un havre de paix transformé en piège mortel par les sbires du Seigneur Vampire.",
-        "monsters": ["Homme-Bête à Marteau", "Homme-Bête à Lance", "Lord Fang"]
+        "tier": 2,
+        "boss": "Lord Fang (Grand Boss Niv 2)",
+        "description": "Un havre de paix transformé en piège mortel.",
+        "objectives": "Sécuriser les jardins.",
+        "monsters": ["Homme-Bête à Marteau (Niv 2)", "Homme-Bête à Lance (Niv 2)", "Lord Fang (Grand Boss Niv 2)"]
     },
     {
         "name": "Scénario 9 : La Bibliothèque Interdite (Inner Circle)", 
         "box": "base", 
-        "boss": "Lord Fang",
-        "description": "Découvrez les grimoires ancestraux tout en échappant aux gardes d'élite de la citadelle.",
-        "monsters": ["Gobelin Archer", "Sœur du Plaisir", "Lord Fang"]
+        "tier": 2,
+        "boss": "Lord Fang (Grand Boss Niv 2)",
+        "description": "Découvrez les grimoires ancestraux.",
+        "objectives": "Protéger les connaissances et survivre.",
+        "monsters": ["Gobelin Archer (Niv 2)", "Sœur du Plaisir (Niv 1)", "Lord Fang (Grand Boss Niv 2)"]
     },
     {
         "name": "Scénario 10 : La Salle du Trône (Inner Circle)", 
         "box": "base", 
-        "boss": "Lord Fang",
-        "description": "L'antre direct de Lord Fang. Chaque recoin abrite un danger mortel.",
-        "monsters": ["Troll", "Minotaure", "Lord Fang"]
+        "tier": 2,
+        "boss": "Lord Fang (Grand Boss Niv 2)",
+        "description": "L'antre direct de Lord Fang.",
+        "objectives": "Percasser les défenses du Seigneur Vampire.",
+        "monsters": ["Troll (Boss Niv 1)", "Minotaure (Mini-Boss Niv 1)", "Lord Fang (Grand Boss Niv 2)"]
     },
     {
         "name": "Scénario 11 : Affrontement Final - Le Temple de l'Aurore", 
         "box": "base", 
-        "boss": "Lord Fang",
-        "description": "Le combat ultime pour sauver Arcadia et terrasser définitivement Lord Fang et ses armées.",
-        "monsters": ["Tous les types de monstres", "Lord Fang"]
+        "tier": 3, # Niveau final
+        "boss": "Lord Fang (Avatar Ultime Niv 3)",
+        "description": "Le combat ultime pour sauver Arcadia.",
+        "objectives": "Terrasser définitivement Lord Fang et ses armées.",
+        "monsters": ["Seigneur des Monstres (Niv 3)", "Lord Fang (Avatar Ultime Niv 3)"]
     }
 ]
 
