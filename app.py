@@ -235,7 +235,6 @@ elif st.session_state.step == 3:
                 m_cols = st.columns([3, 2, 1])
                 m_cols[0].markdown(f"**#{m['id']} {m['name']}** ({color_badge})<br>❤️ `{m['hp']}/{m['max_hp']} PV` — 🪙 `{monster_gold} PO`", unsafe_allow_html=True)
                 
-                # Clé unique combinant l'ID et l'index de position
                 if m_cols[1].button("Dégât 🗡️", key=f"dmg_mon_{m['id']}_{idx}"):
                     m['hp'] -= 1
                     if m['hp'] <= 0:
@@ -244,7 +243,6 @@ elif st.session_state.step == 3:
                         st.session_state.spawned_monsters.pop(idx)
                     st.rerun()
                     
-                # Clé unique combinant l'ID et l'index de position
                 if m_cols[2].button("🗑️", key=f"del_mon_{m['id']}_{idx}"):
                     st.session_state.spawned_monsters.pop(idx)
                     st.rerun()
