@@ -206,8 +206,6 @@ elif st.session_state.step == 3:
     st.subheader("👾 Faire spawner un monstre")
     _, active_monsters_db, _, _ = get_combined_data(st.session_state.selected_boxes)
     
-    # On isole les familles de monstres de base (ex: "Gobelin Archer", "Orc Maraudeur", etc. sans le suffixe de niveau)
-    # Pour que tu puisses choisir le monstre puis son niveau indépendamment.
     clean_monster_names = sorted(list(set([m.rsplit(' (', 1)[0] for m in active_monsters_db.keys()])))
     
     col_sel_m, col_sel_lvl = st.columns([2, 1])
@@ -217,15 +215,12 @@ elif st.session_state.step == 3:
     with col_sel_lvl:
         chosen_level = st.selectbox("Niveau de carte", [1, 2, 3], index=scen_tier-1, key="select_monster_level")
 
-    # On reconstitue la clé exacte dans la base de données selon le choix (ex: "Gobelin Archer (Niv 2)" ou adaptation)
-    # Cherchons dynamiquement le monstre correspondant dans le dictionnaire
     matching_key = None
     for k in active_monsters_db.keys():
         if chosen_monster_base in k and f"Niv {chosen_level}" in k:
             matching_key = k
             break
     if not matching_key:
-        # Fallback si le format de nom diffère un peu
         matching_key = f"{chosen_monster_base} (Niv {chosen_level})"
         if matching_key not in active_monsters_db:
             matching_key = list(active_monsters_db.keys())[0]
@@ -292,7 +287,7 @@ elif st.session_state.step == 3:
         else:
             st.error("Tous les héros sont KO !")
 
-nos st.divider()
+    st.divider()
     if st.button("🔄 Recommencer / Changer de Boîtes", use_container_width=True):
         st.session_state.step = 1
         st.session_state.spawned_monsters = []
